@@ -12,6 +12,6 @@ public enum ColorToken {
         static let primary = ColorPalette.red
         static let secondary = ColorPalette.orange
         static let accent = ColorPalette.blue
-        static let surface = ColorPalette.white
+        static let surface = ColorPalette.purple
     }
 }
