@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1640"
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1FB0FC0C2EBB1EBD00AB5ED5"
+               BuildableName = "OpenHackU2025Meijo.app"
+               BlueprintName = "OpenHackU2025Meijo"
+               ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:OpenHackU2025MeijoUITests"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:AppColorThemeTests/AppColorThemeTest.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1FB0FC192EBB1EBF00AB5ED5"
+               BuildableName = "OpenHackU2025MeijoTests.xctest"
+               BlueprintName = "OpenHackU2025MeijoTests"
+               ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1FB0FC232EBB1EBF00AB5ED5"
+               BuildableName = "OpenHackU2025MeijoUITests.xctest"
+               BlueprintName = "OpenHackU2025MeijoUITests"
+               ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1FB0FC9D2EBDC71B00AB5ED5"
+               BuildableName = "ColorPaletteTests.xctest"
+               BlueprintName = "ColorPaletteTests"
+               ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1FB0FCE52EC1842900AB5ED5"
+               BuildableName = "AppColorThemeTests.xctest"
+               BlueprintName = "AppColorThemeTests"
+               ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1FB0FC0C2EBB1EBD00AB5ED5"
+            BuildableName = "OpenHackU2025Meijo.app"
+            BlueprintName = "OpenHackU2025Meijo"
+            ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1FB0FC0C2EBB1EBD00AB5ED5"
+            BuildableName = "OpenHackU2025Meijo.app"
+            BlueprintName = "OpenHackU2025Meijo"
+            ReferencedContainer = "container:OpenHackU2025Meijo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

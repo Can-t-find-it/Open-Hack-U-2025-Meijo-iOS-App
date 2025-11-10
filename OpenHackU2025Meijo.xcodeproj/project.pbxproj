@@ -1,0 +1,869 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1FB0FCE72EC1842900AB5ED5 /* AppColorTheme.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */; };
+		1FB0FCF12EC1842900AB5ED5 /* AppColorTheme.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */; };
+		1FB0FCF22EC1842900AB5ED5 /* AppColorTheme.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1FB0FC1B2EBB1EBF00AB5ED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FB0FC0C2EBB1EBD00AB5ED5;
+			remoteInfo = OpenHackU2025Meijo;
+		};
+		1FB0FC252EBB1EBF00AB5ED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FB0FC0C2EBB1EBD00AB5ED5;
+			remoteInfo = OpenHackU2025Meijo;
+		};
+		1FB0FCE82EC1842900AB5ED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FB0FCDB2EC1842900AB5ED5;
+			remoteInfo = AppColorTheme;
+		};
+		1FB0FCEA2EC1842900AB5ED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FB0FC0C2EBB1EBD00AB5ED5;
+			remoteInfo = OpenHackU2025Meijo;
+		};
+		1FB0FCEF2EC1842900AB5ED5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FB0FCDB2EC1842900AB5ED5;
+			remoteInfo = AppColorTheme;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1FB0FCAE2EBDC71B00AB5ED5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1FB0FCF22EC1842900AB5ED5 /* AppColorTheme.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1FB0FC0D2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenHackU2025Meijo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB0FC1A2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenHackU2025MeijoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB0FC242EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenHackU2025MeijoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppColorTheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB0FCE62EC1842900AB5ED5 /* AppColorThemeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppColorThemeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1FB0FC0F2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenHackU2025Meijo;
+			sourceTree = "<group>";
+		};
+		1FB0FC1D2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenHackU2025MeijoTests;
+			sourceTree = "<group>";
+		};
+		1FB0FC272EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenHackU2025MeijoUITests;
+			sourceTree = "<group>";
+		};
+		1FB0FCDD2EC1842900AB5ED5 /* AppColorTheme */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AppColorTheme;
+			sourceTree = "<group>";
+		};
+		1FB0FCEC2EC1842900AB5ED5 /* AppColorThemeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AppColorThemeTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1FB0FC0A2EBB1EBD00AB5ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FB0FCF12EC1842900AB5ED5 /* AppColorTheme.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC172EBB1EBF00AB5ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC212EBB1EBF00AB5ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCD92EC1842900AB5ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCE32EC1842900AB5ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FB0FCE72EC1842900AB5ED5 /* AppColorTheme.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1FB0FC042EBB1EBD00AB5ED5 = {
+			isa = PBXGroup;
+			children = (
+				1FB0FC0F2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */,
+				1FB0FC1D2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests */,
+				1FB0FC272EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests */,
+				1FB0FCDD2EC1842900AB5ED5 /* AppColorTheme */,
+				1FB0FCEC2EC1842900AB5ED5 /* AppColorThemeTests */,
+				1FB0FC0E2EBB1EBD00AB5ED5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1FB0FC0E2EBB1EBD00AB5ED5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FB0FC0D2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo.app */,
+				1FB0FC1A2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests.xctest */,
+				1FB0FC242EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests.xctest */,
+				1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */,
+				1FB0FCE62EC1842900AB5ED5 /* AppColorThemeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1FB0FCD72EC1842900AB5ED5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FB0FC2E2EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025Meijo" */;
+			buildPhases = (
+				1FB0FC092EBB1EBD00AB5ED5 /* Sources */,
+				1FB0FC0A2EBB1EBD00AB5ED5 /* Frameworks */,
+				1FB0FC0B2EBB1EBD00AB5ED5 /* Resources */,
+				1FB0FCAE2EBDC71B00AB5ED5 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FB0FCF02EC1842900AB5ED5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1FB0FC0F2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */,
+			);
+			name = OpenHackU2025Meijo;
+			packageProductDependencies = (
+			);
+			productName = OpenHackU2025Meijo;
+			productReference = 1FB0FC0D2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1FB0FC192EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FB0FC312EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025MeijoTests" */;
+			buildPhases = (
+				1FB0FC162EBB1EBF00AB5ED5 /* Sources */,
+				1FB0FC172EBB1EBF00AB5ED5 /* Frameworks */,
+				1FB0FC182EBB1EBF00AB5ED5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FB0FC1C2EBB1EBF00AB5ED5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1FB0FC1D2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests */,
+			);
+			name = OpenHackU2025MeijoTests;
+			packageProductDependencies = (
+			);
+			productName = OpenHackU2025MeijoTests;
+			productReference = 1FB0FC1A2EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1FB0FC232EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FB0FC342EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025MeijoUITests" */;
+			buildPhases = (
+				1FB0FC202EBB1EBF00AB5ED5 /* Sources */,
+				1FB0FC212EBB1EBF00AB5ED5 /* Frameworks */,
+				1FB0FC222EBB1EBF00AB5ED5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FB0FC262EBB1EBF00AB5ED5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1FB0FC272EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests */,
+			);
+			name = OpenHackU2025MeijoUITests;
+			packageProductDependencies = (
+			);
+			productName = OpenHackU2025MeijoUITests;
+			productReference = 1FB0FC242EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		1FB0FCDB2EC1842900AB5ED5 /* AppColorTheme */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FB0FCF32EC1842900AB5ED5 /* Build configuration list for PBXNativeTarget "AppColorTheme" */;
+			buildPhases = (
+				1FB0FCD72EC1842900AB5ED5 /* Headers */,
+				1FB0FCD82EC1842900AB5ED5 /* Sources */,
+				1FB0FCD92EC1842900AB5ED5 /* Frameworks */,
+				1FB0FCDA2EC1842900AB5ED5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1FB0FCDD2EC1842900AB5ED5 /* AppColorTheme */,
+			);
+			name = AppColorTheme;
+			packageProductDependencies = (
+			);
+			productName = AppColorTheme;
+			productReference = 1FB0FCDC2EC1842900AB5ED5 /* AppColorTheme.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1FB0FCE52EC1842900AB5ED5 /* AppColorThemeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FB0FCF62EC1842900AB5ED5 /* Build configuration list for PBXNativeTarget "AppColorThemeTests" */;
+			buildPhases = (
+				1FB0FCE22EC1842900AB5ED5 /* Sources */,
+				1FB0FCE32EC1842900AB5ED5 /* Frameworks */,
+				1FB0FCE42EC1842900AB5ED5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FB0FCE92EC1842900AB5ED5 /* PBXTargetDependency */,
+				1FB0FCEB2EC1842900AB5ED5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1FB0FCEC2EC1842900AB5ED5 /* AppColorThemeTests */,
+			);
+			name = AppColorThemeTests;
+			packageProductDependencies = (
+			);
+			productName = AppColorThemeTests;
+			productReference = 1FB0FCE62EC1842900AB5ED5 /* AppColorThemeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1FB0FC052EBB1EBD00AB5ED5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					1FB0FC0C2EBB1EBD00AB5ED5 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					1FB0FC192EBB1EBF00AB5ED5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 1FB0FC0C2EBB1EBD00AB5ED5;
+					};
+					1FB0FC232EBB1EBF00AB5ED5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 1FB0FC0C2EBB1EBD00AB5ED5;
+					};
+					1FB0FCDB2EC1842900AB5ED5 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					1FB0FCE52EC1842900AB5ED5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 1FB0FC0C2EBB1EBD00AB5ED5;
+					};
+				};
+			};
+			buildConfigurationList = 1FB0FC082EBB1EBD00AB5ED5 /* Build configuration list for PBXProject "OpenHackU2025Meijo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1FB0FC042EBB1EBD00AB5ED5;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1FB0FC0E2EBB1EBD00AB5ED5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */,
+				1FB0FC192EBB1EBF00AB5ED5 /* OpenHackU2025MeijoTests */,
+				1FB0FC232EBB1EBF00AB5ED5 /* OpenHackU2025MeijoUITests */,
+				1FB0FCDB2EC1842900AB5ED5 /* AppColorTheme */,
+				1FB0FCE52EC1842900AB5ED5 /* AppColorThemeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1FB0FC0B2EBB1EBD00AB5ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC182EBB1EBF00AB5ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC222EBB1EBF00AB5ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCDA2EC1842900AB5ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCE42EC1842900AB5ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1FB0FC092EBB1EBD00AB5ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC162EBB1EBF00AB5ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FC202EBB1EBF00AB5ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCD82EC1842900AB5ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB0FCE22EC1842900AB5ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1FB0FC1C2EBB1EBF00AB5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */;
+			targetProxy = 1FB0FC1B2EBB1EBF00AB5ED5 /* PBXContainerItemProxy */;
+		};
+		1FB0FC262EBB1EBF00AB5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */;
+			targetProxy = 1FB0FC252EBB1EBF00AB5ED5 /* PBXContainerItemProxy */;
+		};
+		1FB0FCE92EC1842900AB5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FB0FCDB2EC1842900AB5ED5 /* AppColorTheme */;
+			targetProxy = 1FB0FCE82EC1842900AB5ED5 /* PBXContainerItemProxy */;
+		};
+		1FB0FCEB2EC1842900AB5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */;
+			targetProxy = 1FB0FCEA2EC1842900AB5ED5 /* PBXContainerItemProxy */;
+		};
+		1FB0FCF02EC1842900AB5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FB0FCDB2EC1842900AB5ED5 /* AppColorTheme */;
+			targetProxy = 1FB0FCEF2EC1842900AB5ED5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1FB0FC2C2EBB1EBF00AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1FB0FC2D2EBB1EBF00AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1FB0FC2F2EBB1EBF00AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025Meijo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1FB0FC302EBB1EBF00AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025Meijo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1FB0FC322EBB1EBF00AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025MeijoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenHackU2025Meijo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenHackU2025Meijo";
+			};
+			name = Debug;
+		};
+		1FB0FC332EBB1EBF00AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025MeijoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenHackU2025Meijo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenHackU2025Meijo";
+			};
+			name = Release;
+		};
+		1FB0FC352EBB1EBF00AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025MeijoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenHackU2025Meijo;
+			};
+			name = Debug;
+		};
+		1FB0FC362EBB1EBF00AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.OpenHackU2025MeijoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenHackU2025Meijo;
+			};
+			name = Release;
+		};
+		1FB0FCF42EC1842900AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.AppColorTheme;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		1FB0FCF52EC1842900AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.AppColorTheme;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		1FB0FCF72EC1842900AB5ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.AppColorThemeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenHackU2025Meijo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenHackU2025Meijo";
+			};
+			name = Debug;
+		};
+		1FB0FCF82EC1842900AB5ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 662HVWJR94;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SouCreate.AppColorThemeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenHackU2025Meijo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenHackU2025Meijo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1FB0FC082EBB1EBD00AB5ED5 /* Build configuration list for PBXProject "OpenHackU2025Meijo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FC2C2EBB1EBF00AB5ED5 /* Debug */,
+				1FB0FC2D2EBB1EBF00AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FB0FC2E2EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025Meijo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FC2F2EBB1EBF00AB5ED5 /* Debug */,
+				1FB0FC302EBB1EBF00AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FB0FC312EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025MeijoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FC322EBB1EBF00AB5ED5 /* Debug */,
+				1FB0FC332EBB1EBF00AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FB0FC342EBB1EBF00AB5ED5 /* Build configuration list for PBXNativeTarget "OpenHackU2025MeijoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FC352EBB1EBF00AB5ED5 /* Debug */,
+				1FB0FC362EBB1EBF00AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FB0FCF32EC1842900AB5ED5 /* Build configuration list for PBXNativeTarget "AppColorTheme" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FCF42EC1842900AB5ED5 /* Debug */,
+				1FB0FCF52EC1842900AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FB0FCF62EC1842900AB5ED5 /* Build configuration list for PBXNativeTarget "AppColorThemeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FB0FCF72EC1842900AB5ED5 /* Debug */,
+				1FB0FCF82EC1842900AB5ED5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1FB0FC052EBB1EBD00AB5ED5 /* Project object */;
+}

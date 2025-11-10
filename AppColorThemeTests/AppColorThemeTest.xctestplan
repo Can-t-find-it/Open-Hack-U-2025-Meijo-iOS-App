@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "EEFB4D74-D167-4640-97FC-3FFB3D630864",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:OpenHackU2025Meijo.xcodeproj",
+        "identifier" : "1FB0FCE52EC1842900AB5ED5",
+        "name" : "AppColorThemeTests"
+      }
+    }
+  ],
+  "version" : 1
+}
