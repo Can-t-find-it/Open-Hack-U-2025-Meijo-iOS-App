@@ -5,6 +5,7 @@ struct AccountView: View {
         VStack {
             Text("AccountView")
         }
+        .fullBackground()
     }
 }
 

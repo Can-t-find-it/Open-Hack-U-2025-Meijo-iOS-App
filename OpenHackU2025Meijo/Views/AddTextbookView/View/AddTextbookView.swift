@@ -2,7 +2,10 @@ import SwiftUI
 
 struct AddTextbookView: View {
     var body: some View {
-        Text("AddTextbookView")
+        VStack {
+            Text("AddTextbooksView")
+        }
+        .fullBackground()
     }
 }
 

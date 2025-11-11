@@ -4,7 +4,7 @@ import AppColorTheme
 struct SlidingContentHost<Selection: Hashable, Content: View>: View {
     let selection: Selection               // 現在の選択（.id に使う）
     let isForward: Bool                    // 進む/戻るの向き
-    var animation: Animation = .easeInOut(duration: 0.28)
+    var animation: Animation = .easeInOut(duration: 0.5)
     @ViewBuilder var content: () -> Content
 
     var body: some View {

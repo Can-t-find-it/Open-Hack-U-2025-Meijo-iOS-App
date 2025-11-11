@@ -2,7 +2,10 @@ import SwiftUI
 
 struct OthersTextbookView: View {
     var body: some View {
-        Text("OthersTextbooksView")
+        VStack {
+            Text("OthersTextbooksView")
+        }
+        .fullBackground()
     }
 }
 

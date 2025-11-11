@@ -8,12 +8,15 @@ struct TopView: View {
 
     var body: some View {
         ZStack { // コンテンツ表示部分
-            SlidingContentHost(
-                selection: selectedTab,
-                isForward: isForward,
-                animation: .easeInOut(duration: 0.5)
-            ) {
-                content(for: selectedTab)
+//            SlidingContentHost(
+//                selection: selectedTab,
+//                isForward: isForward,
+//                animation: .easeInOut(duration: 0.5)
+//            ) {
+//                content(for: selectedTab)
+//            }
+            SmoothSlidingHost(selection: selectedTab, isForward: isForward, duration: 0.28) { sel in
+                content(for: sel)
             }
         }
         .overlay(alignment: .bottom) { // タブバー表示部分
@@ -22,6 +25,7 @@ struct TopView: View {
                 selectedTab = t
             }
         }
+        .fullBackground()
     }
 
     // 画面本体
