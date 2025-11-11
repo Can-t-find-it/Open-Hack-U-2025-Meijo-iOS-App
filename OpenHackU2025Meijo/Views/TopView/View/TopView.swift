@@ -7,8 +7,7 @@ struct TopView: View {
     @State private var previous: Tab = .home
 
     var body: some View {
-        VStack(spacing: 0) {
-            // コンテンツ表示部分
+        ZStack { // コンテンツ表示部分
             SlidingContentHost(
                 selection: selectedTab,
                 isForward: isForward,
@@ -16,8 +15,8 @@ struct TopView: View {
             ) {
                 content(for: selectedTab)
             }
-
-            // タブバー表示部分
+        }
+        .overlay(alignment: .bottom) { // タブバー表示部分
             TabBar(selected: $selectedTab) { t in
                 previous = selectedTab
                 selectedTab = t

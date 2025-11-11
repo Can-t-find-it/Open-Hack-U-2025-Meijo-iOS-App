@@ -9,9 +9,10 @@ public enum ColorToken {
     }
 
     public enum BackgroundColor {
-        static let primary = ColorPalette.red
+        static let primary = ColorPalette.white
         static let secondary = ColorPalette.orange
         static let accent = ColorPalette.blue
         static let surface = ColorPalette.purple
+        static let tabColor = ColorPalette.midnight
     }
 }

@@ -14,5 +14,6 @@ public extension AppColorToken {
         public static var secondary: Color { ColorToken.BackgroundColor.secondary }
         public static var accent: Color { ColorToken.BackgroundColor.accent }
         public static var surface: Color { ColorToken.BackgroundColor.surface }
+        public static var tabColor: Color { ColorToken.BackgroundColor.tabColor }
     }
 }

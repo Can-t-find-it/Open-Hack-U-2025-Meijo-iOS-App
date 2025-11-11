@@ -6,17 +6,22 @@ struct TabBar: View {
     var onSelect: (Tab) -> Void
 
     var body: some View {
-        HStack {
-            ForEach(Tab.allCases, id: \.self) { t in
-                TabBarButton(tab: t, isSelected: selected == t) {
-                    onSelect(t)
+        VStack {
+            Spacer()
+            HStack {
+                ForEach(Tab.allCases, id: \.self) { t in
+                    TabBarButton(tab: t, isSelected: selected == t) {
+                        onSelect(t)
+                    }
                 }
             }
+            .custom3DBackground(width: 380, height: 60, cornerRadius: 50)
         }
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity)
-//        .background(Color.white.opacity(0.25))
-        .background(AppColorToken.background.surface)
-        .shadow(color: .white.opacity(0.1), radius: 8, y: -2)
+        .padding(.bottom, 30)
+        .ignoresSafeArea()
     }
+}
+
+#Preview {
+    TopView()
 }

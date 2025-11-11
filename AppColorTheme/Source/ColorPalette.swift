@@ -7,4 +7,5 @@ public enum ColorPalette {
     static let red = Color(hex: "FF0000")
     static let orange = Color(hex: "FFA500")
     static let purple = Color(hex: "1E0A46")
+    static let midnight = Color(hex: "121624")
 }

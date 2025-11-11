@@ -23,10 +23,9 @@ struct TabBarButton: View {
     private var foregroundColor: Color {
         if tab == .add {
             // Addボタンは常に赤
-            return .red
+            return .pink
         } else {
-            // 通常タブは選択状態に応じて変化
-//            return isSelected ? .white : .black
+            // その他は常に白
             return .white
         }
     }
