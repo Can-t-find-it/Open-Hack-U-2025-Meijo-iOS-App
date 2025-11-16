@@ -5,24 +5,27 @@ struct TopView: View {
     @Environment(\.layoutDirection) private var dir
     @State private var selectedTab: Tab = .home
     @State private var previous: Tab = .home
+    @State private var isMenuOpen: Bool = false
 
     var body: some View {
         ZStack { // コンテンツ表示部分
-//            SlidingContentHost(
-//                selection: selectedTab,
-//                isForward: isForward,
-//                animation: .easeInOut(duration: 0.5)
-//            ) {
-//                content(for: selectedTab)
-//            }
             SmoothSlidingHost(selection: selectedTab, isForward: isForward, duration: 0.28) { sel in
                 content(for: sel)
             }
         }
         .overlay(alignment: .bottom) { // タブバー表示部分
-            TabBar(selected: $selectedTab) { t in
+            TabBar(
+                selected: $selectedTab,
+                isMenuOpen: $isMenuOpen
+            ) { t in
                 previous = selectedTab
                 selectedTab = t
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                        isMenuOpen = false
+                    }
+                }
             }
         }
         .fullBackground()

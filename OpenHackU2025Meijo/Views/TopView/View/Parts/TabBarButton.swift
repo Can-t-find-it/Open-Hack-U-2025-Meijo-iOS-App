@@ -1,4 +1,5 @@
 import SwiftUI
+import AppColorTheme
 
 struct TabBarButton: View {
     let tab: Tab
@@ -23,7 +24,7 @@ struct TabBarButton: View {
     private var foregroundColor: Color {
         if tab == .add {
             // Addボタンは常に赤
-            return .pink
+            return AppColorToken.background.surface
         } else {
             // その他は常に白
             return .white
@@ -31,3 +32,6 @@ struct TabBarButton: View {
     }
 }
 
+#Preview {
+    TopView()
+}
