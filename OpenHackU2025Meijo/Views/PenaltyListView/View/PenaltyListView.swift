@@ -2,39 +2,19 @@ import SwiftUI
 
 struct PenaltyListView: View {
     var body: some View {
-        VStack {
+        ScrollView {
             VStack {
-                Rectangle()
-                    .frame(height: 240)
-                    .cornerRadius(20)
-                    .overlay {
-                        Image(systemName: "arrowtriangle.right.circle.fill")
-                            .foregroundStyle(.pink)
-                            .font(.title)
-                    }
-                
-                HStack {
-                    Circle()
-                        .frame(width: 40, height: 40)
-                        .overlay {
-                            Image(systemName: "person.fill")
-                                .foregroundStyle(.pink)
-                                .font(.system(size: 25))
-                        }
+                ForEach(0..<5, id: \.self) { index in
+                    PenaltyMovieCard(
+                        username: "username",
+                        timestamp: "timestamp"
+                    )
                     
-                    VStack {
-                        Text("username")
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                        
-                        Text("timestamp")
-                            .foregroundStyle(.gray)
-                    }
-                    
-                    Spacer()
+                    Divider()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.3))
                 }
             }
-            .padding()
         }
         .fullBackground()
     }

@@ -4,7 +4,7 @@ import AppColorTheme
 struct TextbookCardView: View {
     var title: String
     var questionCount: Int
-    var formatLabel: String
+    var questionType: String
 
     var body: some View {
         VStack {
@@ -28,7 +28,7 @@ struct TextbookCardView: View {
                         .fill(Color.white)
                         .frame(width: 90, height: 16)
                     
-                    Text(formatLabel)
+                    Text(questionType)
                         .foregroundColor(AppColorToken.background.surface)
                         .font(.caption)
                         .fontWeight(.semibold)
@@ -56,7 +56,7 @@ struct TextbookCardView: View {
 }
 
 #Preview {
-    TextbookCardView(title: "テキスト名", questionCount: 10, formatLabel: "問題形式")
+    TextbookCardView(title: "テキスト名", questionCount: 10, questionType: "問題形式")
         .padding()
         .background(Color.black)
 }

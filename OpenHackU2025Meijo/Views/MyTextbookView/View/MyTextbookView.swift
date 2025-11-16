@@ -2,6 +2,9 @@ import SwiftUI
 import AppColorTheme
 
 struct MyTextbookView: View {
+    @Binding var isTabBarHidden: Bool
+    @State private var viewModel = MyTextbookViewViewModel()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -10,12 +13,25 @@ struct MyTextbookView: View {
                         GridItem(.flexible()),
                         GridItem(.flexible())
                     ], spacing: 16) {
-                        ForEach(0..<12, id: \.self) { _ in
-                            TextbookCardView(
-                                title: "テキスト名",
-                                questionCount: 10,
-                                formatLabel: "問題形式"
-                            )
+                        ForEach(viewModel.myTextbooks, id: \.id) { myTextbook in
+                            NavigationLink {
+                                QuizView(textbook: myTextbook)
+                                    .onAppear {
+                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                                            isTabBarHidden = true
+                                        }                                    }
+                                    .onDisappear {
+                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                                            isTabBarHidden = false
+                                        }
+                                    }
+                            } label: {
+                                TextbookCardView(
+                                    title: myTextbook.name,
+                                    questionCount: viewModel.questionCount(of: myTextbook),
+                                    questionType: myTextbook.questionType.rawValue
+                                )
+                            }
                         }
                     }
                     .padding()
@@ -33,6 +49,7 @@ struct MyTextbookView: View {
                     Text("編集")
                         .foregroundStyle(.white)
                 }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(systemName: "gearshape.fill")
                         .foregroundStyle(.white)
@@ -45,5 +62,9 @@ struct MyTextbookView: View {
 }
 
 #Preview {
-    MyTextbookView()
+    MyTextbookView(isTabBarHidden: .constant(false))
+}
+
+#Preview {
+    TopView()
 }

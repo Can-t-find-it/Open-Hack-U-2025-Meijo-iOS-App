@@ -6,6 +6,7 @@ struct TopView: View {
     @State private var selectedTab: Tab = .home
     @State private var previous: Tab = .home
     @State private var isMenuOpen: Bool = false
+    @State private var isTabBarHidden: Bool = false
 
     var body: some View {
         ZStack { // コンテンツ表示部分
@@ -14,16 +15,18 @@ struct TopView: View {
             }
         }
         .overlay(alignment: .bottom) { // タブバー表示部分
-            TabBar(
-                selected: $selectedTab,
-                isMenuOpen: $isMenuOpen
-            ) { t in
-                previous = selectedTab
-                selectedTab = t
+            if !isTabBarHidden {
+                TabBar(
+                    selected: $selectedTab,
+                    isMenuOpen: $isMenuOpen
+                ) { t in
+                    previous = selectedTab
+                    selectedTab = t
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
-                        isMenuOpen = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                            isMenuOpen = false
+                        }
                     }
                 }
             }
@@ -35,7 +38,7 @@ struct TopView: View {
     @ViewBuilder
     private func content(for tab: Tab) -> some View {
         switch tab {
-        case .home:    MyTextbookView()
+        case .home:    MyTextbookView(isTabBarHidden: $isTabBarHidden)
         case .others:  OthersTextbookView()
         case .add:     AddTextbookView()
         case .search:  SearchTextbookView()
