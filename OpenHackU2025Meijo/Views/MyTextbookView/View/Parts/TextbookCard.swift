@@ -41,7 +41,7 @@ struct TextbookCardView: View {
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color.white.opacity(0.1),
-                    Color.pink.opacity(0.5)
+                    Color.pink.opacity(0.2)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -59,4 +59,8 @@ struct TextbookCardView: View {
     TextbookCardView(title: "テキスト名", questionCount: 10, formatLabel: "問題形式")
         .padding()
         .background(Color.black)
+}
+
+#Preview {
+    TopView()
 }
