@@ -1,12 +1,13 @@
 import SwiftUI
 
-struct SmoothSlidingHost<Selection: Hashable, Content: View>: View {
-    let selection: Selection
-    let isForward: Bool
-    var duration: Double = 0.28
-    @ViewBuilder var content: (_ sel: Selection) -> Content
+struct SmoothSlidingHost<Content: View>: View {
+    @Environment(\.layoutDirection) private var dir
 
-    @State private var leaving: Selection?
+    let selection: Tab
+    var duration: Double = 0.28
+    @ViewBuilder var content: (_ sel: Tab) -> Content
+
+    @State private var leaving: Tab?
     @State private var inOffset: CGFloat = 0
     @State private var outOffset: CGFloat = 0
 
@@ -19,7 +20,6 @@ struct SmoothSlidingHost<Selection: Hashable, Content: View>: View {
                 // 出ていく側
                 if let leaving {
                     content(leaving)
-                        // ここで必ずコンテンツを“画面サイズ”に拡張・中央寄せ
                         .frame(width: w, height: h, alignment: .center)
                         .offset(x: outOffset)
                         .transition(.identity)
@@ -33,15 +33,24 @@ struct SmoothSlidingHost<Selection: Hashable, Content: View>: View {
                     .transition(.identity)
                     .zIndex(1)
             }
-            .clipped() // はみ出しを切り落としてチラつき防止
+            .clipped()
             .onChange(of: selection) { old, new in
                 leaving = old
-                inOffset  = isForward ?  w : -w
+
+                // ★ old/new から「前進方向かどうか」をここで決める
+                let forward = TabSlideSupport.isForward(
+                    layoutDirection: dir,
+                    from: old.rawValue,
+                    to: new.rawValue
+                )
+                print("host old: \(old), new: \(new), forward: \(forward)")
+
+                inOffset  = forward ?  w : -w
                 outOffset = 0
 
                 withAnimation(.easeInOut(duration: duration)) {
                     inOffset  = 0
-                    outOffset = isForward ? -w :  w
+                    outOffset = forward ? -w :  w
                 }
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
