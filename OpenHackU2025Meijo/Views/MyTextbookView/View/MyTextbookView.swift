@@ -15,7 +15,7 @@ struct MyTextbookView: View {
                     ], spacing: 16) {
                         ForEach(viewModel.myTextbooks, id: \.id) { myTextbook in
                             NavigationLink {
-                                QuizView(textbook: myTextbook)
+                                MyTextbookDetailView(textbook: myTextbook)
                                     .onAppear {
                                         withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                                             isTabBarHidden = true
@@ -55,7 +55,6 @@ struct MyTextbookView: View {
                         .foregroundStyle(.white)
                 }
             }
-
             .fullBackground()
         }
     }

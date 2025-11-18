@@ -22,7 +22,6 @@ struct TopView: View {
                     selected: $selectedTab,
                     isMenuOpen: $isMenuOpen
                 ) { _ in
-                    // ここでは selectedTab をいじらない（Binding がやってくれる）
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                         withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                             isMenuOpen = false
@@ -45,15 +44,6 @@ struct TopView: View {
         case .account: AccountView()
         }
     }
-
-    // 遷移アニメーションの向き
-//    private var isForward: Bool {
-//        TabSlideSupport.isForward(
-//            layoutDirection: dir,
-//            selected: selectedTab.rawValue,
-//            previous: previous.rawValue
-//        )
-//    }
 }
 
 #Preview {
