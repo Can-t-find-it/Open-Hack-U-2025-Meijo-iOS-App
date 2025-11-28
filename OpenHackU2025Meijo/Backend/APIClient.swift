@@ -61,6 +61,44 @@ struct APIClient {
 
         return try JSONDecoder().decode(TextbookDetail.self, from: data)
     }
+    
+    func fetchMyAccount() async throws -> MyAccountResponse {
+        let url = baseURL.appendingPathComponent("/userdata")
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            return try JSONDecoder().decode(MyAccountResponse.self, from: data)
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    func fetchMyStudyLogs() async throws -> [StudyLog] {
+        let url = baseURL.appendingPathComponent("/my-study-logs")
+
+        let request = authorizedRequest(url: url, method: "GET")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            return try JSONDecoder().decode(StudyLogListResponse.self, from: data).logs
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
 }
 
 // エラー種類をざっくり定義

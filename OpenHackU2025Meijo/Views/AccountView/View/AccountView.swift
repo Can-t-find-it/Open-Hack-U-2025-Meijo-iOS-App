@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct AccountView: View {
+    @State private var uerViewModel = AccountViewViewModel()
+    @State private var logsViewModel = StudyLogListViewViewModel()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack{
                     VStack {
                         HStack {
                             
@@ -20,53 +23,39 @@ struct AccountView: View {
                     }
                     .padding(.horizontal)
                     
-                    HStack {
-                        HStack(spacing: 24) {
-                            Circle()
-                                .frame(width: 100, height: 100)
-                                .overlay {
-                                    Image(systemName: "person.fill")
-                                        .foregroundStyle(.pink)
-                                        .font(.system(size: 50))
-                                }
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("username")
-                                    .foregroundStyle(.white)
-                                
-                                HStack(spacing: 24) {
-                                    VStack {
-                                        Text("100")
-                                            .foregroundStyle(.white)
-                                        Text("問題集")
-                                            .foregroundStyle(.white)
-                                    }
-                                    
-                                    VStack {
-                                        Text("100")
-                                            .foregroundStyle(.white)
-                                        Text("継続日数")
-                                            .foregroundStyle(.white)
-                                    }
-                                    
-                                    VStack {
-                                        Text("100")
-                                            .foregroundStyle(.white)
-                                        Text("友達")
-                                            .foregroundStyle(.white)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                        
-                        Spacer()
-                    }
+                    AccountHeaderView(
+                        userName: uerViewModel.userName,
+                        textbookCount: uerViewModel.textbookCount,
+                        streakDays: uerViewModel.streakDays,
+                        friendCount: uerViewModel.friendCount
+                    )
                     
-                    Spacer()
+                    HStack {
+                        Text("学習履歴")
+                            .foregroundStyle(.white)
+                    }
+                    .padding(.top)
+                    
+                    Divider()
+                        .background(Color.white)
+                    
+                    VStack(spacing: 16) {
+                        ForEach(logsViewModel.logs) { log in
+                            StudyLogRowView(log: log)
+                            
+                            Divider()
+                                .background(Color.white)
+                        }
+                    }
                 }
             }
             .fullBackground()
+            .task {
+                await uerViewModel.load()
+            }
+            .task {
+                await logsViewModel.load()
+            }
         }
     }
 }
