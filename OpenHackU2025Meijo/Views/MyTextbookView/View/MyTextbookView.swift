@@ -3,7 +3,8 @@ import AppColorTheme
 
 struct MyTextbookView: View {
     @State private var viewModel = MyTextbookViewViewModel()
-    
+    @State private var isShowingCreateFolderSheet = false
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -37,8 +38,12 @@ struct MyTextbookView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "gearshape.fill")
-                        .foregroundStyle(.white)
+                    Button {
+                        isShowingCreateFolderSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(.white)
+                    }
                 }
             }
             .fullBackground()
@@ -47,11 +52,18 @@ struct MyTextbookView: View {
             await viewModel.load()
             print("\(viewModel.folders)")
         }
+        .sheet(isPresented: $isShowingCreateFolderSheet) {
+            CreateFolderView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+        }
     }
 }
 
 struct FolderContainView: View {
     @Environment(\.presentationMode) var presentationMode
+    
+    @State private var isShowingCreateTextbookSheet = false
     
     let folder: Folder
 
@@ -76,9 +88,12 @@ struct FolderContainView: View {
                     
                     Spacer()
                     
-                    Image(systemName: "ellipsis")
-                        .font(.title2)
-                        .foregroundColor(.white)
+                    Button {
+                        isShowingCreateTextbookSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(.white)
+                    }
                 }
             }
             .padding(.horizontal)
@@ -109,6 +124,11 @@ struct FolderContainView: View {
         }
         .fullBackground()
         .navigationBarHidden(true)
+        .sheet(isPresented: $isShowingCreateTextbookSheet) {
+            CreateTextbookView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+        }
     }
 }
 

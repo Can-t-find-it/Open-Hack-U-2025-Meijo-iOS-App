@@ -5,6 +5,23 @@ struct AddTextbookView: View {
     @State private var prompt: String = ""
     var body: some View {
         VStack {
+            VStack {
+                HStack {
+                    
+                    Spacer()
+                    
+                    Text("友達の問題集一覧")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                }
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+            
             HStack {
                 Image(systemName: "plus.circle.fill")
                     .foregroundColor(.white)
@@ -26,6 +43,8 @@ struct AddTextbookView: View {
                 }
             }
             .padding()
+            
+            Spacer()
         }
         .fullBackground()
     }
