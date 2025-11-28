@@ -72,9 +72,22 @@
 		1FB0FCE62EC1842900AB5ED5 /* AppColorThemeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppColorThemeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1FF22A392ED4CAA8009EA16F /* Exceptions for "OpenHackU2025Meijo" folder in "OpenHackU2025Meijo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1FB0FC0C2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1FB0FC0F2EBB1EBD00AB5ED5 /* OpenHackU2025Meijo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1FF22A392ED4CAA8009EA16F /* Exceptions for "OpenHackU2025Meijo" folder in "OpenHackU2025Meijo" target */,
+			);
 			path = OpenHackU2025Meijo;
 			sourceTree = "<group>";
 		};
@@ -584,6 +597,7 @@
 				DEVELOPMENT_TEAM = 662HVWJR94;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenHackU2025Meijo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -612,6 +626,7 @@
 				DEVELOPMENT_TEAM = 662HVWJR94;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenHackU2025Meijo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

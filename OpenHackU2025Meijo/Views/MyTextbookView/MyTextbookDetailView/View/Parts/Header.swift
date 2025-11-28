@@ -4,6 +4,8 @@ struct TextbookDetailViewHeader: View {
     let title: String
     let onBack: () -> Void
     
+    @State private var showDeleteTextbookAlert = false
+    
     var body: some View {
         VStack {
             HStack {
@@ -22,9 +24,13 @@ struct TextbookDetailViewHeader: View {
                 
                 Spacer()
                 
-                Image(systemName: "ellipsis")
-                    .font(.title2)
-                    .foregroundColor(.white)
+                Button {
+                    showDeleteTextbookAlert = true
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
             }
         }
         .padding()
@@ -38,5 +44,12 @@ struct TextbookDetailViewHeader: View {
                 endPoint: .bottomTrailing
             )
         )
+        .alert("この問題集を削除しますか？",
+               isPresented: $showDeleteTextbookAlert) {
+            Button("キャンセル", role: .cancel) {}
+            Button("削除", role: .destructive) {
+                // 🔥 問題削除処理（後で実装）
+            }
+        }
     }
 }

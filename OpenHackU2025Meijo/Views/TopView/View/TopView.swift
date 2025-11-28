@@ -16,19 +16,22 @@ struct TopView: View {
                 content(for: sel)
             }
         }
+        .onPreferenceChange(TabBarHiddenKey.self) { hidden in
+            isTabBarHidden = hidden
+        }
         .overlay(alignment: .bottom) {
-            if !isTabBarHidden {
-                TabBar(
-                    selected: $selectedTab,
-                    isMenuOpen: $isMenuOpen
-                ) { _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
-                            isMenuOpen = false
-                        }
+            TabBar(
+                selected: $selectedTab,
+                isMenuOpen: $isMenuOpen
+            ) { _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                        isMenuOpen = false
                     }
                 }
             }
+            .offset(y: isTabBarHidden ? 120 : 0)
+            .opacity(isTabBarHidden ? 0 : 1)
         }
         .fullBackground()
     }
@@ -37,7 +40,7 @@ struct TopView: View {
     @ViewBuilder
     private func content(for tab: Tab) -> some View {
         switch tab {
-        case .home:    MyTextbookView(isTabBarHidden: $isTabBarHidden)
+        case .home:    MyTextbookView()
         case .others:  OthersTextbookView()
         case .add:     AddTextbookView()
         case .search:  SearchTextbookView()

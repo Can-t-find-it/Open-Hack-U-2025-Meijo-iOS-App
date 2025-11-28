@@ -2,9 +2,21 @@ import SwiftUI
 import Charts
 
 struct TextbookScoreChart: View {
-    let data: [Int]
+    let data: [Double]
 
     var body: some View {
+        if data.isEmpty {
+            Text("スコアデータがありません")
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, minHeight: 150)
+                .cardBackground()
+        } else {
+            chartView
+        }
+    }
+
+    @ViewBuilder
+    private var chartView: some View {
         Chart(data.indices, id: \.self) { index in
             LineMark(
                 x: .value("Index", index),
@@ -16,25 +28,27 @@ struct TextbookScoreChart: View {
         }
         .frame(height: 200)
         .chartXAxis {
-            AxisMarks(values: Array(stride(from: 0, through: data.count - 1, by: 2))) { value in
+            AxisMarks(values: Array(stride(from: 0, through: max(data.count - 1, 0), by: 2))) { value in
                 AxisGridLine()
                 AxisTick()
                 AxisValueLabel()
-                    .foregroundStyle(.pink)   // X軸メモリ色
+                    .foregroundStyle(.pink)
             }
         }
         .chartYAxis {
-            AxisMarks(values: Array(stride(from: 0, through: data.max() ?? 0, by: 2))) { value in
+            AxisMarks(values: Array(stride(from: 0, through: 100, by: 10))) { value in
                 AxisGridLine()
                 AxisTick()
                 AxisValueLabel()
-                    .foregroundStyle(.pink)   // Y軸メモリ色
+                    .foregroundStyle(.pink)
             }
         }
         .cardBackground()
     }
 }
 
+
 #Preview {
-    MyTextbookDetailView(textbook: feMock)
+//    MyTextbookDetailView(textbook: feMock)
+    MyTextbookDetailView(textName: "基本情報技術者試験", textId: "57385638")
 }
