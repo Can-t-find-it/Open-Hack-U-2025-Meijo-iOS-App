@@ -103,6 +103,79 @@ struct SearchTextbookView: View {
                     }
                 }
                 
+                
+                VStack {
+                    HStack {
+                        Circle()
+                            .frame(width: 50, height: 50)
+                            .overlay {
+                                Image(systemName: "person.fill")
+                                    .foregroundStyle(.pink)
+                                    .font(.system(size: 30))
+                            }
+                        
+                        Text("Fuck 上野")
+                            .font(.title2).fontWeight(.bold)
+                            .foregroundStyle(.white)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "ellipsis")
+                            .font(.title2)
+                            .foregroundStyle(.gray)
+                    }
+                    .padding()
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            VStack {
+                                Text("テキスト名")
+                                    .foregroundStyle(.white)
+                                
+                                Text("10問")
+                                    .foregroundStyle(.gray)
+                            }
+                            .frame(width: 100, height: 150)
+                            .cardBackground()
+                            
+                            VStack {
+                                Text("テキスト名")
+                                    .foregroundStyle(.white)
+                                
+                                Text("10問")
+                                    .foregroundStyle(.gray)
+                            }
+                            .frame(width: 100, height: 150)
+                            .cardBackground()
+                            
+                            VStack {
+                                Text("テキスト名")
+                                    .foregroundStyle(.white)
+                                
+                                Text("10問")
+                                    .foregroundStyle(.gray)
+                            }
+                            .frame(width: 100, height: 150)
+                            .cardBackground()
+                            
+                            VStack {
+                                Text("テキスト名")
+                                    .foregroundStyle(.white)
+                                
+                                Text("10問")
+                                    .foregroundStyle(.gray)
+                            }
+                            .frame(width: 100, height: 150)
+                            .cardBackground()
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                    }
+                }
+                
+                Divider()
+                    .background(.white)
+                
                 Spacer()
             }
             .fullBackground()
