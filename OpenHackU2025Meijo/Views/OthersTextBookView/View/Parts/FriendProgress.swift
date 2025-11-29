@@ -1,12 +1,16 @@
 import SwiftUI
 
 struct FriendProgressCard: View {
+    let userName: String
+    let textbookName: String
+    let dateTime: String
     let progress: Double
     let todayProgress: Int
+    let likeCount: Int
+    let commentCount: Int
     
     var body: some View {
         VStack {
-            // ヘッダー（アイコン + 名前 + 日付 + …）
             HStack {
                 Circle()
                     .frame(width: 50, height: 50)
@@ -17,10 +21,10 @@ struct FriendProgressCard: View {
                     }
                 
                 VStack(alignment: .leading) {
-                    Text("Fuck 上野")
+                    Text(userName)
                         .font(.title2).fontWeight(.bold)
                         .foregroundStyle(.white)
-                    Text("2025 11/28")
+                    Text(dateTime)
                         .foregroundStyle(.gray)
                 }
                 
@@ -62,7 +66,7 @@ struct FriendProgressCard: View {
                         .foregroundStyle(.white)
                         .fontWeight(.bold)
                     
-                    Text("基本情報技術者試験A問題") // 問題集名
+                    Text(textbookName) // 問題集名
                         .foregroundStyle(.white)
                         .fontWeight(.bold)
                 }
@@ -74,12 +78,14 @@ struct FriendProgressCard: View {
                 HStack(spacing: 4) {
                     Image(systemName: "heart")
                         .foregroundStyle(.gray)
-                    Text("9")
+                    Text("\(likeCount)")
                         .foregroundStyle(.gray)
                 }
                 
                 HStack(spacing: 4) {
                     Image(systemName: "bubble")
+                        .foregroundStyle(.gray)
+                    Text("\(commentCount)")
                         .foregroundStyle(.gray)
                 }
                 .padding(.horizontal)
