@@ -8,19 +8,7 @@ struct OthersTextbookView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            Text("友達の進捗")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                            
-                            Spacer()
-                        }
-                    }
-                    .padding(.horizontal)
+                    SectionHeaderView(title: "友達の進捗")
                     
                     Divider()
                         .background(.white)

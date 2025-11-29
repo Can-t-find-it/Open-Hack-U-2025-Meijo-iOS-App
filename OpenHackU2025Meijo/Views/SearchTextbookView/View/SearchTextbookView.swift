@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct SearchTextbookView: View {
-    let selecterItem: [String] = ["基本情報技術者試験", "数学", "歴史", "宅建"]
-    let userList: [String] = ["Use1", "Use2", "Use3", "Use4", "User5"]
+    
+    @State private var viewModel = FriendsTextbooksViewViewModel()
     
     @State private var isSearchCategory = false
     @State private var isSearchFriend = false
@@ -10,26 +10,11 @@ struct SearchTextbookView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                
-                VStack {
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Text("友達の問題集一覧")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                    }
-                }
-                .padding(.horizontal)
+                SectionHeaderView(title: "友達の問題集一覧")
                 
                 HStack {
                     Button {
                         isSearchCategory.toggle()
-                        
                         if isSearchFriend {
                             isSearchFriend = false
                         }
@@ -49,7 +34,6 @@ struct SearchTextbookView: View {
                     
                     Button {
                         isSearchFriend.toggle()
-                        
                         if isSearchCategory {
                             isSearchCategory = false
                         }
@@ -68,29 +52,12 @@ struct SearchTextbookView: View {
                     }
                 }
                 
+                // カテゴリー検索チップ
                 if isSearchCategory {
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(selecterItem, id: \.self) { item in
-                                HStack {
-                                    Text(item)
-                                        .foregroundStyle(Color.white)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(
-                                            Capsule()
-                                                .fill(Color.white.opacity(0.2))
-                                        )
-                                }
-                            }
-                        }
-                    }
-                }
-                if isSearchFriend {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(userList, id: \.self) { user in
-                                Text(user)
+                            ForEach(viewModel.allTextbookNames, id: \.self) { item in
+                                Text(item)
                                     .foregroundStyle(Color.white)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
@@ -100,85 +67,66 @@ struct SearchTextbookView: View {
                                     )
                             }
                         }
+                        .padding(.horizontal)
                     }
                 }
                 
-                
-                VStack {
-                    HStack {
-                        Circle()
-                            .frame(width: 50, height: 50)
-                            .overlay {
-                                Image(systemName: "person.fill")
-                                    .foregroundStyle(.pink)
-                                    .font(.system(size: 30))
+                // 友達検索チップ
+                if isSearchFriend {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(viewModel.allUserNames, id: \.self) { name in
+                                Text(name)
+                                    .foregroundStyle(Color.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.white.opacity(0.2))
+                                    )
                             }
-                        
-                        Text("Fuck 上野")
-                            .font(.title2).fontWeight(.bold)
-                            .foregroundStyle(.white)
-                        
-                        Spacer()
-                        
-                        Image(systemName: "ellipsis")
-                            .font(.title2)
-                            .foregroundStyle(.gray)
-                    }
-                    .padding()
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            VStack {
-                                Text("テキスト名")
-                                    .foregroundStyle(.white)
-                                
-                                Text("10問")
-                                    .foregroundStyle(.gray)
-                            }
-                            .frame(width: 100, height: 150)
-                            .cardBackground()
-                            
-                            VStack {
-                                Text("テキスト名")
-                                    .foregroundStyle(.white)
-                                
-                                Text("10問")
-                                    .foregroundStyle(.gray)
-                            }
-                            .frame(width: 100, height: 150)
-                            .cardBackground()
-                            
-                            VStack {
-                                Text("テキスト名")
-                                    .foregroundStyle(.white)
-                                
-                                Text("10問")
-                                    .foregroundStyle(.gray)
-                            }
-                            .frame(width: 100, height: 150)
-                            .cardBackground()
-                            
-                            VStack {
-                                Text("テキスト名")
-                                    .foregroundStyle(.white)
-                                
-                                Text("10問")
-                                    .foregroundStyle(.gray)
-                            }
-                            .frame(width: 100, height: 150)
-                            .cardBackground()
                         }
                         .padding(.horizontal)
-                        .padding(.bottom)
                     }
                 }
                 
-                Divider()
-                    .background(.white)
+                // 友達の問題集リスト本体
+                Group {
+                    if viewModel.isLoading {
+                        Spacer()
+                        ProgressView()
+                            .tint(.white)
+                        Spacer()
+                    } else if let error = viewModel.errorMessage {
+                        Spacer()
+                        Text(error)
+                            .foregroundStyle(.red)
+                            .padding()
+                        Spacer()
+                    } else if viewModel.friends.isEmpty {
+                        Spacer()
+                        Text("友達の問題集がありません")
+                            .foregroundStyle(.white.opacity(0.8))
+                        Spacer()
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                ForEach(viewModel.friends) { friend in
+                                    FriendTextbooksSectionView(friend: friend)
+                                }
+                            }
+                            .padding(.top, 16)
+                        }
+                    }
+                }
                 
                 Spacer()
             }
             .fullBackground()
+            .ignoresSafeArea(edges: .bottom)
+            .task {
+                await viewModel.load()
+            }
         }
     }
 }

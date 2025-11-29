@@ -8,20 +8,7 @@ struct AccountView: View {
         NavigationStack {
             ScrollView {
                 VStack{
-                    VStack {
-                        HStack {
-                            
-                            Spacer()
-                            
-                            Text("アカウント情報")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                            
-                            Spacer()
-                        }
-                    }
-                    .padding(.horizontal)
+                    SectionHeaderView(title: "アカウント情報")
                     
                     AccountHeaderView(
                         userName: uerViewModel.userName,
