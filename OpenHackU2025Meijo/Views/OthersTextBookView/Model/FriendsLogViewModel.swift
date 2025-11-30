@@ -8,6 +8,7 @@ struct FriendStudyLog: Codable, Identifiable {
     let friendName: String
     let dateTime: String
     let textbookName: String
+    let textbookId: String
     let accuracy: Double        // 0.0 ~ 100.0
     let todayProgress: Int      // 0 ~ 100 (%)
     let likeCount: Int

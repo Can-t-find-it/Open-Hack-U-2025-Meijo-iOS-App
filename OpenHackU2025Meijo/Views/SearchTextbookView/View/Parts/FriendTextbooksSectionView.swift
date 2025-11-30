@@ -5,7 +5,6 @@ struct FriendTextbooksSectionView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // 友達ヘッダー
             HStack {
                 Circle()
                     .frame(width: 50, height: 50)
@@ -27,22 +26,34 @@ struct FriendTextbooksSectionView: View {
             }
             .padding(.horizontal)
             
-            // その友達の問題集一覧（横スクロール）
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(friend.textbooks) { textbook in
-                        VStack {
-                            Text(textbook.name)
-                                .foregroundStyle(.white)
-                                .multilineTextAlignment(.center)
-                                .lineLimit(2)
-                                .frame(maxWidth: .infinity)
-                            
-                            Text("\(textbook.questionCount)問")
-                                .foregroundStyle(.gray)
+                        NavigationLink {
+                            FriendTextbookView(
+                                userName: friend.userName,
+                                textName: textbook.name,
+                                textId: textbook.id
+                            )
+                        } label: {
+                            VStack {
+                                Spacer()
+                                
+                                Text(textbook.name)
+                                    .foregroundStyle(.white)
+                                    .multilineTextAlignment(.center)
+                                    .lineLimit(2)
+                                    .frame(maxWidth: .infinity)
+                                
+                                Spacer()
+                                
+                                Text("\(textbook.questionCount)問")
+                                    .foregroundStyle(.gray)
+                                    .padding(.bottom)
+                            }
+                            .frame(width: 100, height: 150)
+                            .cardBackground()
                         }
-                        .frame(width: 100, height: 150)
-                        .cardBackground()
                     }
                 }
                 .padding(.horizontal)
@@ -54,4 +65,8 @@ struct FriendTextbooksSectionView: View {
                 .padding(.horizontal)
         }
     }
+}
+
+#Preview {
+    SearchTextbookView()
 }

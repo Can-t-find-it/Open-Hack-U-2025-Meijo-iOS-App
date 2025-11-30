@@ -3,6 +3,7 @@ import SwiftUI
 struct FriendProgressCard: View {
     let userName: String
     let textbookName: String
+    let textbookId: String
     let dateTime: String
     let progress: Double
     let todayProgress: Int
@@ -34,43 +35,56 @@ struct FriendProgressCard: View {
                     .font(.title2)
                     .foregroundStyle(.gray)
             }
-            .padding()
+            .padding(.horizontal)
             
-            // 進捗エリア
-            HStack {
-                ZStack {
-                    Circle()
-                        .stroke(Color.white.opacity(0.2), lineWidth: 12)
-                    
-                    Circle()
-                        .trim(from: 0, to: progress)
-                        .stroke(
-                            Color.pink,
-                            style: StrokeStyle(lineWidth: 12, lineCap: .round)
-                        )
-                        .rotationEffect(.degrees(-90))
-                    
-                    VStack {
-                        Text("\(Int(progress * 100))%")
-                            .font(.title).bold()
-                            .foregroundStyle(.white)
-                        Text("正解率")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.8))
-                    }
-                }
-                .frame(width: 100, height: 100)
+            VStack {
+                Text("本日の進捗 \(todayProgress) / 3")
+                    .foregroundStyle(.white)
+                    .fontWeight(.bold)
                 
-                VStack(spacing: 16) {
-                    Text("本日の進捗 \(todayProgress) / 3")
-                        .foregroundStyle(.white)
-                        .fontWeight(.bold)
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .stroke(Color.white.opacity(0.2), lineWidth: 12)
+                        
+                        Circle()
+                            .trim(from: 0, to: progress)
+                            .stroke(
+                                Color.pink,
+                                style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                            )
+                            .rotationEffect(.degrees(-90))
+                        
+                        VStack {
+                            Text("\(Int(progress * 100))%")
+                                .font(.title).bold()
+                                .foregroundStyle(.white)
+                            Text("正解率")
+                                .font(.caption)
+                                .foregroundStyle(.white.opacity(0.8))
+                        }
+                    }
+                    .frame(width: 100, height: 100)
                     
-                    Text(textbookName) // 問題集名
-                        .foregroundStyle(.white)
-                        .fontWeight(.bold)
+                    Spacer()
+                    
+                    NavigationLink {
+                        FriendTextbookView(userName: userName, textName: textbookName, textId: textbookId)
+                    } label: {
+                        VStack {
+                            Text(textbookName)
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(2)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .frame(width: 100, height: 150)
+                        .cardBackground()
+                    }
+                    
+                    Spacer()
                 }
-                .padding()
             }
             
             // リアクションエリア
@@ -95,7 +109,11 @@ struct FriendProgressCard: View {
                 Image(systemName: "arrowshape.down")
                     .foregroundStyle(.gray)
             }
-            .padding()
+            .padding(.horizontal)
         }
     }
+}
+
+#Preview {
+    OthersTextbookView()
 }

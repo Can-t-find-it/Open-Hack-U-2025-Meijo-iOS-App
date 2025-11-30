@@ -31,9 +31,10 @@ struct OthersTextbookView: View {
                                 FriendProgressCard(
                                     userName: log.friendName,
                                     textbookName: log.textbookName,
+                                    textbookId: log.textbookId,
                                     dateTime: log.dateTime,
-                                    progress: log.accuracy / 100.0,   // 0.0 ~ 1.0 に変換
-                                    todayProgress: log.todayProgress, // Int (0~100)
+                                    progress: log.accuracy / 100.0,
+                                    todayProgress: log.todayProgress,
                                     likeCount: log.likeCount,
                                     commentCount: log.commentCount
                                 )
