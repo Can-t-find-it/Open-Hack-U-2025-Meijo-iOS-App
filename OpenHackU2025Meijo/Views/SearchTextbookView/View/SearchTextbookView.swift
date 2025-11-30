@@ -7,6 +7,8 @@ struct SearchTextbookView: View {
     @State private var isSearchCategory = false
     @State private var isSearchFriend = false
     
+    @State private var selectedFriendName: String? = nil
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -37,6 +39,7 @@ struct SearchTextbookView: View {
                         if isSearchCategory {
                             isSearchCategory = false
                         }
+                        selectedFriendName = nil
                     } label: {
                         HStack {
                             Text("友達")
@@ -69,6 +72,7 @@ struct SearchTextbookView: View {
                         }
                         .padding(.horizontal)
                     }
+                    .scrollIndicators(.hidden)
                 }
                 
                 // 友達検索チップ
@@ -76,18 +80,31 @@ struct SearchTextbookView: View {
                     ScrollView(.horizontal) {
                         HStack {
                             ForEach(viewModel.allUserNames, id: \.self) { name in
-                                Text(name)
-                                    .foregroundStyle(Color.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .fill(Color.white.opacity(0.2))
-                                    )
+                                let isSelected = (selectedFriendName == name)
+                                
+                                Button {
+                                    // 同じ友達をもう一度タップしたら解除（＝全件表示に戻す）
+                                    if selectedFriendName == name {
+                                        selectedFriendName = nil
+                                    } else {
+                                        selectedFriendName = name
+                                    }
+                                } label: {
+                                    Text(name)
+                                        .foregroundStyle(Color.white)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            Capsule()
+                                                .fill(isSelected ? Color.pink.opacity(0.8)
+                                                                 : Color.white.opacity(0.2))
+                                        )
+                                }
                             }
                         }
                         .padding(.horizontal)
                     }
+                    .scrollIndicators(.hidden)
                 }
                 
                 // 友達の問題集リスト本体
@@ -109,9 +126,18 @@ struct SearchTextbookView: View {
                             .foregroundStyle(.white.opacity(0.8))
                         Spacer()
                     } else {
+                        // ★ 表示対象の友達一覧を決める
+                        let friendsToShow = selectedFriendName.map { name in
+                            viewModel.friends.filter { friend in
+                                // ここは Friend モデルのプロパティ名に合わせて変更
+                                // 例: friend.userName や friend.name など
+                                friend.userName == name
+                            }
+                        } ?? viewModel.friends
+                        
                         ScrollView {
                             VStack(spacing: 24) {
-                                ForEach(viewModel.friends) { friend in
+                                ForEach(friendsToShow) { friend in
                                     FriendTextbooksSectionView(friend: friend)
                                 }
                             }
