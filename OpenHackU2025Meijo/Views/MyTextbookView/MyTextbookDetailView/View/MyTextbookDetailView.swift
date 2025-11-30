@@ -153,8 +153,53 @@ struct MyTextbookDetailView: View {
             } label: {
                 Label("単語を追加", systemImage: "plus.circle.fill")
             }
-            .font(.subheadline)
+            .font(.headline)
             .foregroundStyle(.blue)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("AIからの提案")
+                    .foregroundStyle(.pink)
+                    .font(.headline)
+                
+                if viewModel.suggestedWords.isEmpty {
+                    Text("提案はまだありません")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.6))
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(viewModel.suggestedWords, id: \.self) { word in
+                                Button {
+                                    guard !newWords.contains(word) else { return }
+                                    
+                                    if let emptyIndex = newWords.firstIndex(where: { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) {
+                                        newWords[emptyIndex] = word
+                                    } else {
+                                        newWords.append(word)
+                                    }
+                                } label: {
+                                    Text(word)
+                                        .foregroundStyle(newWords.contains(word) ? .white : .pink)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            Group {
+                                                if newWords.contains(word) {
+                                                    Capsule()
+                                                        .fill(Color.pink.opacity(0.8))
+                                                } else {
+                                                    Capsule()
+                                                        .stroke(Color.pink.opacity(0.8), lineWidth: 1)
+                                                }
+                                            }
+                                        )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.vertical)
 
             HStack {
                 Spacer()
@@ -184,9 +229,7 @@ struct MyTextbookDetailView: View {
                     Text("問題を生成")
                 }
                 .padding(.horizontal)
-
             }
-            .padding(.top, 4)
         }
         .padding()
         .cardBackground()
@@ -199,5 +242,5 @@ struct MyTextbookDetailView: View {
     MyTextbookDetailView(textName: "基本情報技術者試験", textId: "11")
 }
 #Preview {
-    MyTextbookDetailView(textName: "基本情報技術者試験", textId: "57385638")
+    TopView()
 }

@@ -159,6 +159,28 @@ struct APIClient {
             throw APIError.decodeError(error)
         }
     }
+    
+    func fetchWordSuggestions(textId: String) async throws -> [String] {
+        // 例: GET /textbook/{id}/word-suggestions から
+        let url = baseURL
+            .appendingPathComponent("wordsugest")
+            .appendingPathComponent(textId)
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(WordSuggestionsResponse.self, from: data)
+            return result.words
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
 
 }
 

@@ -48,7 +48,7 @@ struct TextbookDetailViewHeader: View {
                isPresented: $showDeleteTextbookAlert) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) {
-                // 🔥 問題削除処理（後で実装）
+                onBack()
             }
         }
     }

@@ -12,6 +12,9 @@ final class MyTextbookDetailViewViewModel {
         score: [],
         times: 0
     )
+    
+    var suggestedWords: [String] = []
+    
     var isLoading: Bool = false
     var errorMessage: String? = nil
 
@@ -31,6 +34,9 @@ final class MyTextbookDetailViewViewModel {
             let result = try await apiClient.fetchTextbook(textId: textId)
             print(textId)
             textbook = result
+            
+            let words = try await apiClient.fetchWordSuggestions(textId: textId)
+            suggestedWords = words
         } catch {
             if let apiError = error as? APIError {
                 switch apiError {
