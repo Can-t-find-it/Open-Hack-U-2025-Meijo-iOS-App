@@ -161,7 +161,6 @@ struct APIClient {
     }
     
     func fetchWordSuggestions(textId: String) async throws -> [String] {
-        // 例: GET /textbook/{id}/word-suggestions から
         let url = baseURL
             .appendingPathComponent("wordsugest")
             .appendingPathComponent(textId)

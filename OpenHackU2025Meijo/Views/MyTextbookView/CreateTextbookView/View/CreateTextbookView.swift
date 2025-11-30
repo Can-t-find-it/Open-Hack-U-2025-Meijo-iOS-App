@@ -12,6 +12,27 @@ struct CreateTextbookView: View {
     @State private var isShowingDocumentPicker = false
     @State private var selectedFileURL: URL?
     
+    enum QuestionFormat: String, CaseIterable {
+        case auto = "おまかせ"
+        case oneQA = "一問一答"
+        case fillBlank = "穴埋め"
+    }
+
+    enum AnswerMethod: String, CaseIterable {
+        case auto = "おまかせ"
+        case fourChoices = "4択問題"
+        case input = "解答入力"
+    }
+
+    enum QuestionCount: CaseIterable {
+        case auto, few, normal, many
+    }
+    
+    @State private var selectedQuestionFormat: QuestionFormat = .auto
+    @State private var selectedAnswerMethod: AnswerMethod = .auto
+    @State private var selectedQuestionCount: QuestionCount = .auto
+
+    
     var body: some View {
         VStack {
             ZStack {
@@ -61,125 +82,84 @@ struct CreateTextbookView: View {
                         .foregroundStyle(.white)
                     
                     HStack {
-                        Text("おまかせ")
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(Color.pink.opacity(0.8))
-                            )
-                        Text("一問一答")
-                            .foregroundStyle(.pink)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                            )
-                        Text("穴埋め")
-                            .foregroundStyle(.pink)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                            )
+                        ForEach(QuestionFormat.allCases, id: \.self) { format in
+                            let isSelected = (selectedQuestionFormat == format)
+                            
+                            Button {
+                                selectedQuestionFormat = format
+                            } label: {
+                                Text(format.rawValue)
+                                    .foregroundStyle(isSelected ? .white : .pink)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .fill(isSelected ? Color.pink.opacity(0.8) : .clear)
+                                    )
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.pink.opacity(0.8),
+                                                    lineWidth: isSelected ? 0 : 1)
+                                    )
+                            }
+                        }
                     }
                 }
+
                 
                 VStack(alignment: .leading) {
-                    Text("解答形式")
+                    Text("解答方法")
                         .foregroundStyle(.white)
                     
                     HStack {
-                        Text("おまかせ")
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(Color.pink.opacity(0.8))
-                            )
-                        Text("4択問題")
-                            .foregroundStyle(.pink)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                            )
-                        Text("解答入力")
-                            .foregroundStyle(.pink)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                            )
+                        ForEach(AnswerMethod.allCases, id: \.self) { method in
+                            let isSelected = (selectedAnswerMethod == method)
+                            
+                            Button {
+                                selectedAnswerMethod = method
+                            } label: {
+                                Text(method.rawValue)
+                                    .foregroundStyle(isSelected ? .white : .pink)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .fill(isSelected ? Color.pink.opacity(0.8) : .clear)
+                                    )
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.pink.opacity(0.8),
+                                                    lineWidth: isSelected ? 0 : 1)
+                                    )
+                            }
+                        }
                     }
                 }
+
                 
                 VStack(alignment: .leading) {
                     Text("問題数")
                         .foregroundStyle(.white)
                     
                     HStack {
-                        VStack {
-                            Text("おまかせ")
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(
-                                    Capsule()
-                                        .fill(Color.pink.opacity(0.8))
-                                )
-                            
-                            Text("自動的に設定")
-                                .foregroundStyle(.gray)
-                                .font(.callout)
-                        }
-                        VStack {
-                            Text("少なめ")
-                                .foregroundStyle(.pink)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(
-                                    Capsule()
-                                        .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                                )
-                            Text("5問程度")
-                                .foregroundStyle(.gray)
-                                .font(.callout)
-                        }
-                        VStack {
-                            Text("普通")
-                                .foregroundStyle(.pink)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(
-                                    Capsule()
-                                        .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                                )
-                            Text("10問程度")
-                                .foregroundStyle(.gray)
-                                .font(.callout)
-                        }
-                        VStack {
-                            Text("多め")
-                                .foregroundStyle(.pink)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(
-                                    Capsule()
-                                        .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                                )
-                            Text("20問程度")
-                                .foregroundStyle(.gray)
-                                .font(.callout)
-                        }
+                        questionCountButton(.auto,
+                                            title: "おまかせ",
+                                            subtitle: "自動的に設定")
+                        
+                        questionCountButton(.few,
+                                            title: "少なめ",
+                                            subtitle: "5問程度")
+                        
+                        questionCountButton(.normal,
+                                            title: "普通",
+                                            subtitle: "10問程度")
+                        
+                        questionCountButton(.many,
+                                            title: "多め",
+                                            subtitle: "20問程度")
                     }
                 }
+
                 
                 Button(action: {
                     isShowingDocumentPicker = true
@@ -218,6 +198,38 @@ struct CreateTextbookView: View {
     private var isTextbookNameValid: Bool {
         !textbookName.trimmingCharacters(in: .whitespaces).isEmpty
     }
+    
+    @ViewBuilder
+    private func questionCountButton(_ count: QuestionCount,
+                                     title: String,
+                                     subtitle: String) -> some View {
+        let isSelected = (selectedQuestionCount == count)
+        
+        Button {
+            selectedQuestionCount = count
+        } label: {
+            VStack {
+                Text(title)
+                    .foregroundStyle(isSelected ? .white : .pink)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(isSelected ? Color.pink.opacity(0.8) : .clear)
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.pink.opacity(0.8),
+                                    lineWidth: isSelected ? 0 : 1)
+                    )
+                
+                Text(subtitle)
+                    .foregroundStyle(.gray)
+                    .font(.callout)
+            }
+        }
+    }
+
 }
 
 
