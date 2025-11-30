@@ -44,6 +44,15 @@ final class FriendTextbookDetailViewViewModel {
         isLoading = false
     }
     
+    func addTextbook(
+        textbookId: String,
+        textbookName: String,
+        folderId: String,
+        folderName: String
+    ) async {
+
+    }
+    
     func countQuestion(of textbook: FriendTextbookDetail) -> Int {
         textbook.questions.count
     }

@@ -34,9 +34,7 @@ struct OthersTextbookView: View {
                                     textbookId: log.textbookId,
                                     dateTime: log.dateTime,
                                     progress: log.accuracy / 100.0,
-                                    todayProgress: log.todayProgress,
-                                    likeCount: log.likeCount,
-                                    commentCount: log.commentCount
+                                    todayProgress: log.todayProgress
                                 )
                                 
                                 Divider()

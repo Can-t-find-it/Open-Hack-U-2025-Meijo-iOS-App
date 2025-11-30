@@ -44,6 +44,25 @@ extension View {
     }
 }
 
+extension View {
+    func cardBackground(
+        cornerRadius: CGFloat = 20,
+        lineWidth: CGFloat = 1,
+        strokeOpacity: Double = 0.2,
+        fillOpacity: Double = 0.1
+    ) -> some View {
+        self.background(
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .stroke(Color.white.opacity(strokeOpacity), lineWidth: lineWidth)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(Color.white.opacity(fillOpacity))
+                )
+        )
+    }
+}
+
+
 #Preview {
     TopView()
 }

@@ -25,9 +25,9 @@ struct StudyLogRowView: View {
                 
                 Spacer()
                 
-                Image(systemName: "ellipsis")
-                    .font(.title2)
-                    .foregroundStyle(.gray)
+//                Image(systemName: "ellipsis")
+//                    .font(.title2)
+//                    .foregroundStyle(.gray)
             }
             .padding(.horizontal)
             
@@ -64,28 +64,27 @@ struct StudyLogRowView: View {
                 .padding()
             }
             
-            // いいね・コメント数
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "heart")
-                        .foregroundStyle(.gray)
-                    
-                    Text("\(log.likeCount)")
-                        .foregroundStyle(.gray)
-                }
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "bubble")
-                        .foregroundStyle(.gray)
-                    
-                    Text("\(log.commentCount)")
-                        .foregroundStyle(.gray)
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-            }
-            .padding(.horizontal)
+//            HStack {
+//                HStack(spacing: 4) {
+//                    Image(systemName: "hand.thumbsup")
+//                        .foregroundStyle(.gray)
+//                    
+//                    Text("\(log.goodCount)")
+//                        .foregroundStyle(.gray)
+//                }
+//                
+//                HStack(spacing: 4) {
+//                    Image(systemName: "hand.thumbsdown")
+//                        .foregroundStyle(.gray)
+//                    
+//                    Text("\(log.badCount)")
+//                        .foregroundStyle(.gray)
+//                }
+//                .padding(.horizontal)
+//                
+//                Spacer()
+//            }
+//            .padding(.horizontal)
         }
     }
 }

@@ -7,8 +7,6 @@ struct FriendProgressCard: View {
     let dateTime: String
     let progress: Double
     let todayProgress: Int
-    let likeCount: Int
-    let commentCount: Int
     
     var body: some View {
         VStack {
@@ -31,9 +29,9 @@ struct FriendProgressCard: View {
                 
                 Spacer()
                 
-                Image(systemName: "ellipsis")
-                    .font(.title2)
-                    .foregroundStyle(.gray)
+//                Image(systemName: "ellipsis")
+//                    .font(.title2)
+//                    .foregroundStyle(.gray)
             }
             .padding(.horizontal)
             
@@ -87,29 +85,26 @@ struct FriendProgressCard: View {
                 }
             }
             
-            // リアクションエリア
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "heart")
-                        .foregroundStyle(.gray)
-                    Text("\(likeCount)")
-                        .foregroundStyle(.gray)
-                }
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "bubble")
-                        .foregroundStyle(.gray)
-                    Text("\(commentCount)")
-                        .foregroundStyle(.gray)
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-                
-                Image(systemName: "arrowshape.down")
-                    .foregroundStyle(.gray)
-            }
-            .padding(.horizontal)
+//            // リアクションエリア
+//            HStack {
+//                HStack(spacing: 4) {
+//                    Image(systemName: "hand.thumbsup")
+//                        .foregroundStyle(.gray)
+//                    Text("\(goodCount)")
+//                        .foregroundStyle(.gray)
+//                }
+//                
+//                HStack(spacing: 4) {
+//                    Image(systemName: "hand.thumbsdown")
+//                        .foregroundStyle(.gray)
+//                    Text("\(badCount)")
+//                        .foregroundStyle(.gray)
+//                }
+//                .padding(.horizontal)
+//                
+//                Spacer()
+//            }
+//            .padding(.horizontal)
         }
     }
 }

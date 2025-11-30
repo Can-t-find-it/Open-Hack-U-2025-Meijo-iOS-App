@@ -20,6 +20,4 @@ struct StudyLog: Codable, Identifiable {
     let dateTime: String
     let textbookName: String
     let accuracy: Double
-    let likeCount: Int
-    let commentCount: Int
 }

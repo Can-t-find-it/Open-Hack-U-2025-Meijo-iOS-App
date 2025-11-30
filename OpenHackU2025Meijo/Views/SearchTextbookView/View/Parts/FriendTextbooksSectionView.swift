@@ -20,9 +20,9 @@ struct FriendTextbooksSectionView: View {
                 
                 Spacer()
                 
-                Image(systemName: "ellipsis")
-                    .font(.title2)
-                    .foregroundStyle(.gray)
+//                Image(systemName: "ellipsis")
+//                    .font(.title2)
+//                    .foregroundStyle(.gray)
             }
             .padding(.horizontal)
             

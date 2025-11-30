@@ -4,6 +4,10 @@ struct FriendTextbookView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var viewModel: FriendTextbookDetailViewViewModel
+    @State private var folderListVM = MyTextbookViewViewModel()
+    
+    @State private var isShowingFolderSelectSheet = false
+    @State private var selectedFolderID: Folder.ID? = nil
     
     let userName: String
     let textName: String
@@ -54,8 +58,8 @@ struct FriendTextbookView: View {
                 )
             )
             
-            // MARK: - 本文
             ScrollView {
+                
                 VStack(alignment: .leading, spacing: 16) {
                     if viewModel.isLoading {
                         HStack {
@@ -75,6 +79,21 @@ struct FriendTextbookView: View {
                     }
                 }
                 .padding()
+                
+                Button {
+                    isShowingFolderSelectSheet = true
+                    Task {
+                        await folderListVM.load()
+                    }
+                } label: {
+                    Text("自分の問題集に追加")
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 12)
+                        .background(Color.blue.opacity(0.8))
+                        .cornerRadius(5)
+                        .padding()
+                }
             }
             
             Spacer()
@@ -86,9 +105,11 @@ struct FriendTextbookView: View {
         .task {
             await viewModel.load()
         }
+        .sheet(isPresented: $isShowingFolderSelectSheet) {
+            folderSelectSheet
+        }
     }
     
-    // MARK: - 1問分のカード（QuestionList を使わずに埋め込み）
     @ViewBuilder
     private func questionCard(question: Question) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -156,6 +177,89 @@ struct FriendTextbookView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardBackground()
     }
+    
+    private var folderSelectSheet: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("どのフォルダーに保存しますか？")
+                    .font(.headline)
+                    .padding(.top)
+                
+                if folderListVM.isLoading {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .padding()
+                } else if let error = folderListVM.errorMessage {
+                    Text(error)
+                        .foregroundStyle(.red)
+                        .padding()
+                } else if folderListVM.folders.isEmpty {
+                    Text("フォルダーがありません")
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
+                } else {
+                    List {
+                        ForEach(folderListVM.folders) { folder in
+                            HStack {
+                                Text(folder.name)
+                                
+                                Spacer()
+                                
+                                if selectedFolderID == folder.id {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                            .contentShape(Rectangle()) // 行全体タップ可能に
+                            .onTapGesture {
+                                selectedFolderID = folder.id
+                            }
+                        }
+                    }
+                }
+                
+                Button {
+                    // 選択中フォルダーを取得
+                    if let id = selectedFolderID,
+                       let folder = folderListVM.folders.first(where: { $0.id == id }) {
+                        
+                        Task {
+                            await viewModel.addTextbook(
+                                textbookId: textId,
+                                textbookName: textName,
+                                folderId: folder.id,
+                                folderName: folder.name
+                            )
+                        }
+                        
+                        isShowingFolderSelectSheet = false
+                    }
+                } label: {
+                    Text("追加")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(selectedFolderID == nil ? Color.gray.opacity(0.4) : Color.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                }
+                .disabled(selectedFolderID == nil)
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") {
+                        isShowingFolderSelectSheet = false
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 #Preview {
