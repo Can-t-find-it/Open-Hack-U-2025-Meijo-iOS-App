@@ -3,48 +3,59 @@ import AppColorTheme
 
 struct CreateFolderView: View {
     @State private var folderName: String = ""
-    
+    @FocusState private var isTextFieldFocused: Bool
+
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         VStack {
             ZStack {
                 HStack {
-                    
-                    Text("キャンセル")
-                        .foregroundColor(.blue)
-                    
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("キャンセル")
+                            .foregroundColor(.blue)
+                    }
+
                     Spacer()
-                    
-                    Text("完了")
-                        .foregroundColor(.blue)
+
+                    Button {
+                        // folderName が空でないときのみ実行
+                        // ここでフォルダ作成処理を入れる
+                        dismiss()
+                    } label: {
+                        Text("完了")
+                            .foregroundColor(isFolderNameValid ? .blue : .gray) // 色の変化
+                    }
+                    .disabled(!isFolderNameValid)  // ← 無効化
                 }
-                
+
                 Text("フォルダー作成")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
             }
             .padding()
-            
-            VStack {
-                
-            }
-            .frame(width: 180, height: 120)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.white.opacity(0.1),
-                        Color.pink.opacity(0.2)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+
+            VStack {}
+                .frame(width: 180, height: 120)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.white.opacity(0.1),
+                            Color.pink.opacity(0.2)
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
                 )
-            )
-            .cornerRadius(16)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.white.opacity(0.4), lineWidth: 1)
-            )
-            
+                .cornerRadius(16)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                )
+
             TextField("フォルダー名を入力", text: $folderName)
                 .padding()
                 .foregroundColor(.white)
@@ -57,10 +68,21 @@ struct CreateFolderView: View {
                         .stroke(Color.white.opacity(0.3), lineWidth: 1)
                 )
                 .padding(.horizontal, 16)
-            
+                .focused($isTextFieldFocused)
+
             Spacer()
         }
         .background(AppColorToken.background.surface)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isTextFieldFocused = true
+            }
+        }
+    }
+
+    // MARK: - 入力チェック
+    private var isFolderNameValid: Bool {
+        !folderName.trimmingCharacters(in: .whitespaces).isEmpty
     }
 }
 
