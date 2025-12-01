@@ -2,10 +2,6 @@ import Foundation
 
 struct APIClient {
     
-    private var token: String? {
-        UserDefaults.standard.string(forKey: "auth_token")
-    }
-    
     private let baseURL: URL = {
         #if targetEnvironment(simulator)
         // Mac の iOS シミュレータからは 127.0.0.1 で Mac ローカルに届く
@@ -17,6 +13,11 @@ struct APIClient {
         #endif
     }()
     
+    private var token: String? {
+        UserDefaults.standard.string(forKey: "auth_token")
+    }
+    
+    // Authorization Header作成
     private func authorizedRequest(url: URL, method: String) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -30,6 +31,7 @@ struct APIClient {
     }
 
 
+    // フォルダー一覧取得
     func fetchFolders() async throws -> [Folder] {
         let url = baseURL.appendingPathComponent("/textbooks")
         
@@ -45,6 +47,7 @@ struct APIClient {
         return try JSONDecoder().decode(FolderResponse.self, from: data).folder
     }
     
+    // 問題集情報取得
     func fetchTextbook(textId: String) async throws -> TextbookDetail {
         let url = baseURL
             .appendingPathComponent("textbook")
@@ -62,6 +65,7 @@ struct APIClient {
         return try JSONDecoder().decode(TextbookDetail.self, from: data)
     }
     
+    // アカウント情報取得
     func fetchMyAccount() async throws -> MyAccountResponse {
         let url = baseURL.appendingPathComponent("/userdata")
         
@@ -81,6 +85,7 @@ struct APIClient {
         }
     }
     
+    // 自分の学習ログ取得
     func fetchMyStudyLogs() async throws -> [StudyLog] {
         let url = baseURL.appendingPathComponent("/my-study-logs")
 
@@ -100,6 +105,7 @@ struct APIClient {
         }
     }
     
+    // 友達の問題集一覧取得
     func fetchFriendsTextbooks() async throws -> [FriendTextbooks] {
         let url = baseURL.appendingPathComponent("/friend-textbooks")
         
@@ -120,6 +126,7 @@ struct APIClient {
         }
     }
     
+    // 友達の学習記録取得
     func fetchFriendsStudyLogs() async throws -> [FriendStudyLog] {
         let url = baseURL.appendingPathComponent("/friends-study-logs")
         
@@ -140,6 +147,7 @@ struct APIClient {
         }
     }
     
+    // 友達の問題集情報取得
     func fetchFriendTextbook(textId: String) async throws -> FriendTextbookDetail {
         let url = baseURL
             .appendingPathComponent("friend-textbook")
@@ -160,6 +168,7 @@ struct APIClient {
         }
     }
     
+    // AIからの単語提案
     func fetchWordSuggestions(textId: String) async throws -> [String] {
         let url = baseURL
             .appendingPathComponent("wordsugest")
