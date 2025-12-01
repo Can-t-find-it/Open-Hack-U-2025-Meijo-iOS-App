@@ -29,6 +29,16 @@ struct APIClient {
 
         return request
     }
+    
+    // ステータスコード204
+    private func validate204(_ response: URLResponse) throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidStatusCode
+        }
+        guard httpResponse.statusCode == 204 else {
+            throw APIError.invalidStatusCode
+        }
+    }
 
 
     // フォルダー一覧取得
@@ -47,6 +57,37 @@ struct APIClient {
         return try JSONDecoder().decode(FolderResponse.self, from: data).folder
     }
     
+    // フォルダー作成
+    func createFolder(name: String) async throws {
+        let url = baseURL.appendingPathComponent("/folders")
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = CreateFolderRequest(name: name)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+
+    // フォルダー削除
+    func deleteFolders(folderIds: [String]) async throws {
+        let url = baseURL.appendingPathComponent("/folders")
+        
+        var request = authorizedRequest(url: url, method: "DELETE")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = DeleteFoldersRequest(folderIds: folderIds)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+
+    
     // 問題集情報取得
     func fetchTextbook(textId: String) async throws -> TextbookDetail {
         let url = baseURL
@@ -62,7 +103,166 @@ struct APIClient {
             throw APIError.invalidStatusCode
         }
 
-        return try JSONDecoder().decode(TextbookDetail.self, from: data)
+        do {
+            let result = try JSONDecoder().decode(TextbookDetailResponse.self, from: data)
+            return result.textbook
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    // createTextbook
+    // 問題集作成
+    
+    // 問題集削除
+    func deleteTextbook(textId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("textbook")
+            .appendingPathComponent(textId)
+        
+        let request = authorizedRequest(url: url, method: "DELETE")
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // 問題の追加
+    func createQuestion(textId: String, words: [String]) async throws {
+        let url = baseURL
+            .appendingPathComponent("question")
+            .appendingPathComponent(textId)
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = CreateQuestionRequest(words: words)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // 問題を削除
+    func deleteQuestion(questionId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("question")
+            .appendingPathComponent(questionId)
+        
+        let request = authorizedRequest(url: url, method: "DELETE")
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // 問題文を追加
+    func createQuestionStatement(questionId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("question-statement")
+            .appendingPathComponent(questionId)
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        
+        request.httpBody = nil
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // 問題文を削除
+    func deleteQuestionStatement(statementId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("question-statement")
+            .appendingPathComponent(statementId)
+        
+        let request = authorizedRequest(url: url, method: "DELETE")
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // 友達の問題集一覧取得
+    func fetchFriendsTextbooks() async throws -> [FriendTextbooks] {
+        let url = baseURL.appendingPathComponent("/friend-textbooks")
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            return try JSONDecoder()
+                .decode(FriendsTextbooksResponse.self, from: data)
+                .friends
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    // 友達の問題集情報取得
+    func fetchFriendTextbook(textId: String) async throws -> FriendTextbookDetail {
+        let url = baseURL
+            .appendingPathComponent("friend-textbook")
+            .appendingPathComponent(textId)
+
+        let request = authorizedRequest(url: url, method: "GET")
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            let result = try JSONDecoder().decode(FriendTextbookDetailResponse.self, from: data)
+            return result.textbook
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+
+    
+    // 友達の問題集を自分の問題集に追加
+    func addFriendTextbookToMyTextbooks(folderId: String, friendTextbookId: String) async throws {
+        let url = baseURL.appendingPathComponent("/add-friend-textbook")
+
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body = AddFriendTextbookRequest(folderId: folderId, friendTextbookId: friendTextbookId)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+
+        try validate204(response)
+    }
+    
+    // 友達の学習記録一覧取得
+    func fetchFriendsStudyLogs() async throws -> [FriendStudyLog] {
+        let url = baseURL.appendingPathComponent("/friends-study-logs")
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            return try JSONDecoder()
+                .decode(FriendsStudyLogListResponse.self, from: data)
+                .logs
+        } catch {
+            throw APIError.decodeError(error)
+        }
     }
     
     // アカウント情報取得
@@ -105,69 +305,6 @@ struct APIClient {
         }
     }
     
-    // 友達の問題集一覧取得
-    func fetchFriendsTextbooks() async throws -> [FriendTextbooks] {
-        let url = baseURL.appendingPathComponent("/friend-textbooks")
-        
-        let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200..<300).contains(httpResponse.statusCode) else {
-            throw APIError.invalidStatusCode
-        }
-
-        do {
-            return try JSONDecoder()
-                .decode(FriendsTextbooksResponse.self, from: data)
-                .friends
-        } catch {
-            throw APIError.decodeError(error)
-        }
-    }
-    
-    // 友達の学習記録取得
-    func fetchFriendsStudyLogs() async throws -> [FriendStudyLog] {
-        let url = baseURL.appendingPathComponent("/friends-study-logs")
-        
-        let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200..<300).contains(httpResponse.statusCode) else {
-            throw APIError.invalidStatusCode
-        }
-
-        do {
-            return try JSONDecoder()
-                .decode(FriendsStudyLogListResponse.self, from: data)
-                .logs
-        } catch {
-            throw APIError.decodeError(error)
-        }
-    }
-    
-    // 友達の問題集情報取得
-    func fetchFriendTextbook(textId: String) async throws -> FriendTextbookDetail {
-        let url = baseURL
-            .appendingPathComponent("friend-textbook")
-            .appendingPathComponent(textId)
-
-        let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200..<300).contains(httpResponse.statusCode) else {
-            throw APIError.invalidStatusCode
-        }
-
-        do {
-            return try JSONDecoder().decode(FriendTextbookDetail.self, from: data)
-        } catch {
-            throw APIError.decodeError(error)
-        }
-    }
-    
     // AIからの単語提案
     func fetchWordSuggestions(textId: String) async throws -> [String] {
         let url = baseURL
@@ -189,7 +326,69 @@ struct APIClient {
             throw APIError.decodeError(error)
         }
     }
+    
+    // 自分の学習ログを記録
+    func createMyStudyLog(textbookId: String, score: Double) async throws {
+        let url = baseURL
+            .appendingPathComponent("my-study-log")
+            .appendingPathComponent(textbookId)
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = CreateMyStudyLogRequest(score: score)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        try validate204(response)
+    }
+    
+    // フレンド追加
+    func addFriend(friendId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("friend")
+            .appendingPathComponent(friendId)
+        
+        let request = authorizedRequest(url: url, method: "POST")
 
+        let (_, response) = try await URLSession.shared.data(for: request)
+
+        try validate204(response)
+    }
+    
+    // フレンド削除
+    func deleteFriend(friendId: String) async throws {
+        let url = baseURL
+            .appendingPathComponent("friend")
+            .appendingPathComponent(friendId)
+        
+        let request = authorizedRequest(url: url, method: "DELETE")
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+
+        try validate204(response)
+    }
+    
+    // フレンド一覧取得
+    func fetchFriends() async throws -> [Friend] {
+        let url = baseURL.appendingPathComponent("/friends")
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            return try JSONDecoder().decode(FriendsListResponse.self, from: data).friends
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
 }
 
 // エラー種類をざっくり定義

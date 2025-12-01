@@ -33,12 +33,12 @@ final class MyTextbookViewViewModel {
         isLoading = false
     }
     
-    func deleteFolders(ids: Set<Folder.ID>) {
-        // ローカルデータ削除
-        folders.removeAll { ids.contains($0.id) }
+    func createFolder(name: String) {
 
-        // ここでサーバーにも DELETE リクエストを投げるイメージ
-        // Task { try await apiClient.deleteFolders(ids: Array(ids)) }
+    }
+    
+    func deleteFolders(ids: Set<Folder.ID>) {
+
     }
     
     func countTextbook(of folders: Folder) -> Int {

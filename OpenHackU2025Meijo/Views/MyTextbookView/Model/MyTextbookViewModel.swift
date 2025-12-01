@@ -1,65 +1,65 @@
 import Foundation
 
 // MARK: - Model
-struct FolderResponse: Codable {
-    let folder: [Folder]
-}
+//struct FolderResponse: Codable {
+//    let folder: [Folder]
+//}
 
 // フォルダ
-struct Folder: Identifiable, Codable {
-    let id: String
-    let name: String
-    let progress: Int
-    let textbooks: [Textbook]
-}
+//struct Folder: Identifiable, Codable {
+//    let id: String
+//    let name: String
+//    let progress: Int
+//    let textbooks: [Textbook]
+//}
 
-struct TextbookDetailResponse: Codable {
-    let textbook: TextbookDetail
-}
+//struct TextbookDetailResponse: Codable {
+//    let textbook: TextbookDetail
+//}
 // 問題集
-struct Textbook: Identifiable, Codable {
-    let id: String
-    let name: String
-    let type: String
-}
+//struct Textbook: Identifiable, Codable {
+//    let id: String
+//    let name: String
+//    let type: String
+//}
 
-struct TextbookDetail: Identifiable, Codable {
-    let id: String
-    let name: String
-    let type: String
-    let questions: [Question]
-    let score: [Double]
-    let times: Int
-}
+//struct TextbookDetail: Identifiable, Codable {
+//    let id: String
+//    let name: String
+//    let type: String
+//    let questions: [Question]
+//    let score: [Double]
+//    let times: Int
+//}
 
-struct Question: Identifiable, Codable {
-    let id: String
-    let questionStatements: [QuestionStatement]
-    let answer: String
-}
-
-struct QuestionStatement: Identifiable, Codable {
-    let id: String
-    let questionStatement: String // 問題文
-    let choices: [String]? // 4択問題選択肢(4択問題形式ではない場合null)
-    let explain: String // 問題解説
-}
-
-enum QuestionType: String {
-    case inputAnswer = "解答入力形式" // 解答入力形式
-    case multipleChoice = "4択問題形式" // 4択問題形式
-    case fillInTheBlankMultipleChoice = "穴埋め4択問題形式" // 穴埋め4択問題形式
-    case fillInTheBlankInputAnswer = "穴埋め解答入力形式" // 穴埋め解答入力形式
-    
-}
-
-struct MyTextbook {
-    let id: UUID
-    let name: String // 問題集名
-    let questionType: QuestionType // 問題形式
-    var questions: [Question] // 問題
-    // 学習回数
-}
+//struct Question: Identifiable, Codable {
+//    let id: String
+//    let questionStatements: [QuestionStatement]
+//    let answer: String
+//}
+//
+//struct QuestionStatement: Identifiable, Codable {
+//    let id: String
+//    let questionStatement: String // 問題文
+//    let choices: [String]? // 4択問題選択肢(4択問題形式ではない場合null)
+//    let explain: String // 問題解説
+//}
+//
+//enum QuestionType: String {
+//    case inputAnswer = "解答入力形式" // 解答入力形式
+//    case multipleChoice = "4択問題形式" // 4択問題形式
+//    case fillInTheBlankMultipleChoice = "穴埋め4択問題形式" // 穴埋め4択問題形式
+//    case fillInTheBlankInputAnswer = "穴埋め解答入力形式" // 穴埋め解答入力形式
+//    
+//}
+//
+//struct MyTextbook {
+//    let id: UUID
+//    let name: String // 問題集名
+//    let questionType: QuestionType // 問題形式
+//    var questions: [Question] // 問題
+//    // 学習回数
+//}
 
 // MARK: - Mock
 //let feMock = MyTextbook(
