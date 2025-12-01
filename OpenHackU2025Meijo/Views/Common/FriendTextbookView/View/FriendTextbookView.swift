@@ -3,8 +3,7 @@ import SwiftUI
 struct FriendTextbookView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var viewModel: FriendTextbookDetailViewViewModel
-    @State private var folderListVM = MyTextbookViewViewModel()
+    @State private var viewModel: FriendTextbookViewViewModel
     
     @State private var isShowingFolderSelectSheet = false
     @State private var selectedFolderID: Folder.ID? = nil
@@ -17,7 +16,7 @@ struct FriendTextbookView: View {
         self.userName = userName
         self.textName = textName
         self.textId = textId
-        _viewModel = State(initialValue: FriendTextbookDetailViewViewModel(textId: textId))
+        _viewModel = State(initialValue: FriendTextbookViewViewModel(textId: textId))
     }
     
     var body: some View {
@@ -82,9 +81,6 @@ struct FriendTextbookView: View {
                 
                 Button {
                     isShowingFolderSelectSheet = true
-                    Task {
-                        await folderListVM.load()
-                    }
                 } label: {
                     Text("自分の問題集に追加")
                         .frame(maxWidth: .infinity)
@@ -185,24 +181,24 @@ struct FriendTextbookView: View {
                     .font(.headline)
                     .padding(.top)
                 
-                if folderListVM.isLoading {
+                if viewModel.isLoading {
                     HStack {
                         Spacer()
                         ProgressView()
                         Spacer()
                     }
                     .padding()
-                } else if let error = folderListVM.errorMessage {
+                } else if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundStyle(.red)
                         .padding()
-                } else if folderListVM.folders.isEmpty {
+                } else if viewModel.folders.isEmpty {
                     Text("フォルダーがありません")
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
                 } else {
                     List {
-                        ForEach(folderListVM.folders) { folder in
+                        ForEach(viewModel.folders) { folder in
                             HStack {
                                 Text(folder.name)
                                 
@@ -223,7 +219,7 @@ struct FriendTextbookView: View {
                 Button {
                     // 選択中フォルダーを取得
                     if let id = selectedFolderID,
-                       let folder = folderListVM.folders.first(where: { $0.id == id }) {
+                       let folder = viewModel.folders.first(where: { $0.id == id }) {
                         
                         Task {
                             await viewModel.addTextbook(

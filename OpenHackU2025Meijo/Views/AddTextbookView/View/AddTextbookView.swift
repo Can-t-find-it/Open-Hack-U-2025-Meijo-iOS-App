@@ -8,7 +8,7 @@ struct AddTextbookView: View {
     @State private var isShowingDocumentPicker = false
     @State private var selectedFileURL: URL?
     
-    @State private var folderListVM = MyTextbookViewViewModel()
+    @State private var viewModel = AddTextbookViewViewModel()
     
     enum QuestionFormat: String, CaseIterable {
         case auto = "おまかせ"
@@ -155,7 +155,7 @@ struct AddTextbookView: View {
                         
                         ScrollView(.horizontal) {
                             HStack {
-                                ForEach(folderListVM.folders) { folder in
+                                ForEach(viewModel.folders) { folder in
                                     let isSelected = (selectedFolderID == folder.id)
                                     
                                     Button {
@@ -228,7 +228,7 @@ struct AddTextbookView: View {
                     .presentationDragIndicator(.visible)
             }
             .task {
-                await folderListVM.load()
+                await viewModel.load()
             }
         }
     }

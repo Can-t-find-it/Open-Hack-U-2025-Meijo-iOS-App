@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct OthersTextbookView: View {
+struct FriendsLogView: View {
     
     @State private var viewModel = FriendsStudyLogListViewViewModel()
     
@@ -54,5 +54,5 @@ struct OthersTextbookView: View {
 }
 
 #Preview {
-    OthersTextbookView()
+    FriendsLogView()
 }

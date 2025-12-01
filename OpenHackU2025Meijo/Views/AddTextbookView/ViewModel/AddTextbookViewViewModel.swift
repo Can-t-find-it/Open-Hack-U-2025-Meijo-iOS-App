@@ -3,33 +3,21 @@ import Observation
 
 @MainActor
 @Observable
-final class FriendTextbookViewViewModel {
-    var textbook: FriendTextbookDetail = FriendTextbookDetail(
-        id: "",
-        name: "",
-        type: "",
-        questions: []
-    )
+final class AddTextbookViewViewModel {
     var folders: [Folder] = []
     
+    // ローディング & エラー
     var isLoading: Bool = false
     var errorMessage: String? = nil
 
     private let apiClient = APIClient()
     
-    let textId: String
-    
-    init(textId: String) {
-        self.textId = textId
-    }
-
+    // 一覧取得
     func load() async {
         isLoading = true
         errorMessage = nil
-
+        
         do {
-            let result = try await apiClient.fetchFriendTextbook(textId: textId)
-            textbook = result
             let folderList = try await apiClient.fetchFolders()
             folders = folderList
         } catch {
@@ -44,20 +32,7 @@ final class FriendTextbookViewViewModel {
                 errorMessage = "通信エラーが発生しました。"
             }
         }
-
+        
         isLoading = false
-    }
-    
-    func addTextbook(
-        textbookId: String,
-        textbookName: String,
-        folderId: String,
-        folderName: String
-    ) async {
-
-    }
-    
-    func countQuestion(of textbook: FriendTextbookDetail) -> Int {
-        textbook.questions.count
     }
 }

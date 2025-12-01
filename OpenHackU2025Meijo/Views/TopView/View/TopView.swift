@@ -41,7 +41,7 @@ struct TopView: View {
     private func content(for tab: Tab) -> some View {
         switch tab {
         case .home:    MyTextbookView()
-        case .others:  OthersTextbookView()
+        case .others:  FriendsLogView()
         case .add:     AddTextbookView()
         case .search:  SearchTextbookView()
         case .account: AccountView()

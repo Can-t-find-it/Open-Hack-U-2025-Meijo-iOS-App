@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct AccountView: View {
-    @State private var uerViewModel = AccountViewViewModel()
-    @State private var logsViewModel = StudyLogListViewViewModel()
+    @State private var viewModel = AccountViewViewModel()
     
     var body: some View {
         NavigationStack {
@@ -11,10 +10,10 @@ struct AccountView: View {
                     SectionHeaderView(title: "アカウント情報")
                     
                     AccountHeaderView(
-                        userName: uerViewModel.userName,
-                        textbookCount: uerViewModel.textbookCount,
-                        streakDays: uerViewModel.streakDays,
-                        friendCount: uerViewModel.friendCount
+                        userName: viewModel.userName,
+                        textbookCount: viewModel.textbookCount,
+                        streakDays: viewModel.streakDays,
+                        friendCount: viewModel.friendCount
                     )
                     
                     HStack {
@@ -27,7 +26,7 @@ struct AccountView: View {
                         .background(Color.white)
                     
                     VStack(spacing: 16) {
-                        ForEach(logsViewModel.logs) { log in
+                        ForEach(viewModel.logs) { log in
                             StudyLogRowView(log: log)
                             
                             Divider()
@@ -38,10 +37,7 @@ struct AccountView: View {
             }
             .fullBackground()
             .task {
-                await uerViewModel.load()
-            }
-            .task {
-                await logsViewModel.load()
+                await viewModel.load()
             }
         }
     }

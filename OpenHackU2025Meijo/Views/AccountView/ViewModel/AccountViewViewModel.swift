@@ -5,6 +5,7 @@ import Observation
 @Observable
 final class AccountViewViewModel {
     var account: MyAccountResponse? = nil
+    var logs: [StudyLog] = []
     var isLoading: Bool = false
     var errorMessage: String? = nil
 
@@ -31,47 +32,17 @@ final class AccountViewViewModel {
         errorMessage = nil
 
         do {
-            let result = try await apiClient.fetchMyAccount()
-            account = result
+            let accountResult = try await apiClient.fetchMyAccount()
+            account = accountResult
+            
+            let logsResult = try await apiClient.fetchMyStudyLogs()
+            logs = logsResult
         } catch {
             if let apiError = error as? APIError {
                 switch apiError {
                 case .invalidStatusCode:
                     errorMessage = "サーバーエラーが発生しました。"
                 case .decodeError(_):
-                    errorMessage = "データの読み取りに失敗しました。"
-                }
-            } else {
-                errorMessage = "通信エラーが発生しました。"
-            }
-        }
-
-        isLoading = false
-    }
-}
-
-@MainActor
-@Observable
-final class StudyLogListViewViewModel {
-    var logs: [StudyLog] = []
-    var isLoading: Bool = false
-    var errorMessage: String? = nil
-
-    private let apiClient = APIClient()
-
-    func load() async {
-        isLoading = true
-        errorMessage = nil
-
-        do {
-            let result = try await apiClient.fetchMyStudyLogs()
-            logs = result
-        } catch {
-            if let apiError = error as? APIError {
-                switch apiError {
-                case .invalidStatusCode:
-                    errorMessage = "サーバーエラーが発生しました。"
-                case .decodeError:
                     errorMessage = "データの読み取りに失敗しました。"
                 }
             } else {

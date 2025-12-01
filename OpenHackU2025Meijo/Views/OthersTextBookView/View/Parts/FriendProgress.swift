@@ -110,5 +110,5 @@ struct FriendProgressCard: View {
 }
 
 #Preview {
-    OthersTextbookView()
+    FriendsLogView()
 }
