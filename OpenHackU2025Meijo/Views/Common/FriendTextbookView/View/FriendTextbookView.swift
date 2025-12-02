@@ -222,12 +222,7 @@ struct FriendTextbookView: View {
                        let folder = viewModel.folders.first(where: { $0.id == id }) {
                         
                         Task {
-                            await viewModel.addTextbook(
-                                textbookId: textId,
-                                textbookName: textName,
-                                folderId: folder.id,
-                                folderName: folder.name
-                            )
+                            await viewModel.addFriendTextbookToMyTextbooks(folderId: folder.id)
                         }
                         
                         isShowingFolderSelectSheet = false

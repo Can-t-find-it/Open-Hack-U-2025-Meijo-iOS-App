@@ -48,13 +48,30 @@ final class FriendTextbookViewViewModel {
         isLoading = false
     }
     
-    func addTextbook(
-        textbookId: String,
-        textbookName: String,
-        folderId: String,
-        folderName: String
-    ) async {
-
+    func addFriendTextbookToMyTextbooks(folderId: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            try await apiClient.addFriendTextbookToMyTextbooks(
+                folderId: folderId,
+                friendTextbookId: textId
+            )
+            
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .invalidStatusCode:
+                    errorMessage = "問題集の追加に失敗しました。"
+                case .decodeError:
+                    errorMessage = "データの読み取りに失敗しました。"
+                }
+            } else {
+                errorMessage = "通信エラーが発生しました。"
+            }
+        }
+        
+        isLoading = false
     }
     
     func countQuestion(of textbook: FriendTextbookDetail) -> Int {
