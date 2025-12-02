@@ -11,52 +11,55 @@ struct MyTextbookView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ], spacing: 16) {
+                if viewModel.isLoading {
+                    skeletonGrid
+                } else {
+                    VStack {
+                        LazyVGrid(columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible())
+                        ], spacing: 16) {
 
-                        ForEach(viewModel.folders) { folder in
-                            let isSelected = selectedFolderIDs.contains(folder.id)
+                            ForEach(viewModel.folders) { folder in
+                                let isSelected = selectedFolderIDs.contains(folder.id)
 
-                            Group {
-                                if isEditing {
-                                    // 編集モード：タップで選択/解除
-                                    TextbooksCardView(
-                                        title: folder.name,
-                                        textbookCount: viewModel.countTextbook(of: folder),
-                                        progress: folder.progress
-                                    )
-                                    .overlay(alignment: .topTrailing) {
-                                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                                            .font(.title3)
-                                            .padding(8)
-                                    }
-                                    .onTapGesture {
-                                        if isSelected {
-                                            selectedFolderIDs.remove(folder.id)
-                                        } else {
-                                            selectedFolderIDs.insert(folder.id)
-                                        }
-                                    }
-
-                                } else {
-                                    // 通常モード：タップでフォルダ詳細へ
-                                    NavigationLink {
-                                        FolderContainView(folder: folder)
-                                    } label: {
+                                Group {
+                                    if isEditing {
                                         TextbooksCardView(
                                             title: folder.name,
                                             textbookCount: viewModel.countTextbook(of: folder),
                                             progress: folder.progress
                                         )
+                                        .overlay(alignment: .topTrailing) {
+                                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                                                .font(.title3)
+                                                .padding(8)
+                                        }
+                                        .onTapGesture {
+                                            if isSelected {
+                                                selectedFolderIDs.remove(folder.id)
+                                            } else {
+                                                selectedFolderIDs.insert(folder.id)
+                                            }
+                                        }
+
+                                    } else {
+                                        // 通常モード：タップでフォルダ詳細へ
+                                        NavigationLink {
+                                            FolderContainView(folder: folder)
+                                        } label: {
+                                            TextbooksCardView(
+                                                title: folder.name,
+                                                textbookCount: viewModel.countTextbook(of: folder),
+                                                progress: folder.progress
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .toolbar {
@@ -130,6 +133,18 @@ struct MyTextbookView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
+    }
+    
+    var skeletonGrid: some View {
+        LazyVGrid(columns: [
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ], spacing: 16) {
+            ForEach(0..<6) { _ in
+                SkeletonTextbookCardView()
+            }
+        }
+        .padding()
     }
 }
 

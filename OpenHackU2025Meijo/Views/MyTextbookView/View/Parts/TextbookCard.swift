@@ -55,6 +55,35 @@ struct TextbookCardView: View {
     }
 }
 
+struct SkeletonTextbookCardView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            
+            // タイトルの代わりの棒
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 120, height: 16)
+            
+            // サブ情報（問題数など）の棒
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 80, height: 14)
+            
+            // プログレスバーの代わり
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 10)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, minHeight: 130)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white.opacity(0.15))
+        )
+        .shimmer()
+    }
+}
+
 #Preview {
     TextbookCardView(title: "テキスト名", questionCount: 10, questionType: "問題形式")
         .padding()
