@@ -9,7 +9,7 @@ struct APIClient {
         #else
         // Mac の LAN IP を使う
 //        return URL(string: "http://192.168.1.69:3658/m1/1133790-1125856-default")!
-        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")!
+        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")! // 54.95.221.66:8080
         #endif
     }()
     
@@ -58,7 +58,7 @@ struct APIClient {
 
 
     // サインアップ
-    func signUp(name: String, email: String, password: String) async throws -> SignUpResponse {
+    func signUp(name: String, email: String, password: String) async throws -> CertificationResponse {
         let url = baseURL.appendingPathComponent("signup")
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -76,7 +76,7 @@ struct APIClient {
         }
         
         do {
-            let result = try JSONDecoder().decode(SignUpResponse.self, from: data)
+            let result = try JSONDecoder().decode(CertificationResponse.self, from: data)
             UserDefaults.standard.set(result.token, forKey: "auth_token")
             return result
         } catch {
@@ -85,7 +85,7 @@ struct APIClient {
     }
     
     // ログイン
-    func login(email: String, password: String) async throws -> SignUpResponse {
+    func login(email: String, password: String) async throws -> CertificationResponse {
         let url = baseURL.appendingPathComponent("login")
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -103,7 +103,7 @@ struct APIClient {
         }
         
         do {
-            let result = try JSONDecoder().decode(SignUpResponse.self, from: data)
+            let result = try JSONDecoder().decode(CertificationResponse.self, from: data)
             UserDefaults.standard.set(result.token, forKey: "auth_token")
             return result
         } catch {
@@ -134,7 +134,7 @@ struct APIClient {
         var request = authorizedRequest(url: url, method: "POST")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body = CreateFolderRequest(name: name)
+        let body = CreateFolderRequest(folderName: name)
         request.httpBody = try JSONEncoder().encode(body)
         
         let (data, response) = try await URLSession.shared.data(for: request)

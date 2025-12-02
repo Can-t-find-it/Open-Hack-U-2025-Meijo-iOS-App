@@ -14,23 +14,8 @@ struct SignUpRequest: Codable {
     let password: String
 }
 
-struct SignUpUser: Codable, Identifiable {
-    let id: Int
-    let name: String
-    let email: String
-    let iconUrl: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case email
-        case iconUrl = "icon_url"
-    }
-}
-
-struct SignUpResponse: Codable {
+struct CertificationResponse: Codable {
     let token: String
-    let user: SignUpUser
 }
 
 struct LoginRequest: Codable {
@@ -57,7 +42,7 @@ struct Textbook: Identifiable, Codable {
 }
 
 struct CreateFolderRequest: Codable {
-    let name: String
+    let folderName: String
 }
 
 struct DeleteFoldersRequest: Codable {
@@ -126,8 +111,18 @@ struct FriendTextbook: Codable, Identifiable {
     let textbookId: String
     let name: String
     let questionCount: Int
+    let createdAt: String
+    let updateAt: String
     
     var id: String { textbookId }
+    
+    enum CodingKeys: String, CodingKey {
+        case textbookId
+        case name
+        case questionCount
+        case createdAt = "created_at"
+        case updateAt = "update_at"
+    }
 }
 
 struct FriendTextbookDetailResponse: Codable {
