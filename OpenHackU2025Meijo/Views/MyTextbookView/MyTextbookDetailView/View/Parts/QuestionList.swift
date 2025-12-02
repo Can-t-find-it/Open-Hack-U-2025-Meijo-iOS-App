@@ -3,10 +3,21 @@ import SwiftUI
 struct QuestionList: View {
     let questions: [Question]
     
+    let onDeleteQuestion: (Question) -> Void
+    let onDeleteStatement: (QuestionStatement) -> Void
+    let onAddStatement: (Question) -> Void
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             ForEach(questions) { question in
-                QuestionCard(question: question)
+                QuestionCard(
+                    question: question,
+                    onDeleteQuestion: { onDeleteQuestion(question) },
+                    onDeleteStatement: { statement in
+                        onDeleteStatement(statement)
+                    },
+                    onAddStatement: { onAddStatement(question) }
+                )
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -18,8 +29,14 @@ struct QuestionList: View {
 private struct QuestionCard: View {
     let question: Question
     
+    let onDeleteQuestion: () -> Void
+    let onDeleteStatement: (QuestionStatement) -> Void
+    let onAddStatement: () -> Void
+    
     @State private var showDeleteStatementAlert = false   // 問題文削除
     @State private var showDeleteQuestionAlert = false    // 問題削除
+    
+    @State private var targetStatement: QuestionStatement? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -45,6 +62,7 @@ private struct QuestionCard: View {
                             Spacer()
                             
                             Button {
+                                targetStatement = statement
                                 showDeleteStatementAlert = true
                             } label: {
                                 Image(systemName: "trash")
@@ -103,9 +121,13 @@ private struct QuestionCard: View {
             .padding(.horizontal)
             .padding(.bottom, 8)
             
-            HStack {
-                Image(systemName: "sparkles")
-                Text("問題文を追加")
+            Button {
+                onAddStatement()
+            } label: {
+                HStack {
+                    Image(systemName: "sparkles")
+                    Text("問題文を追加")
+                }
             }
             .font(.subheadline)
             .foregroundStyle(.blue)
@@ -118,14 +140,16 @@ private struct QuestionCard: View {
                isPresented: $showDeleteStatementAlert) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) {
-                // 🔥 実際の削除処理（後で実装）
+                if let statement = targetStatement {
+                    onDeleteStatement(statement)
+                }
             }
         }
         .alert("この問題を問題集から削除しますか？",
                isPresented: $showDeleteQuestionAlert) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) {
-                // 🔥 問題削除処理（後で実装）
+                onDeleteQuestion()
             }
         }
     }

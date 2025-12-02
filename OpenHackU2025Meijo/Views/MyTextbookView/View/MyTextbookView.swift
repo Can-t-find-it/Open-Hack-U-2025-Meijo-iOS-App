@@ -83,7 +83,6 @@ struct MyTextbookView: View {
                     if isEditing {
                         // 編集モード中：削除ボタン
                         Button {
-                            // ここではまだ削除せず、アラート表示フラグだけ立てる
                             isShowingDeleteAlert = true
                         } label: {
                             Image(systemName: "trash")
@@ -104,10 +103,15 @@ struct MyTextbookView: View {
             .fullBackground()
             .alert("本当に削除しますか？", isPresented: $isShowingDeleteAlert) {
                 Button("削除", role: .destructive) {
-                    withAnimation {
-                        viewModel.deleteFolders(ids: selectedFolderIDs)
-                        selectedFolderIDs.removeAll()
-                        isEditing = false
+                    Task {
+                        await viewModel.deleteFolders(ids: selectedFolderIDs)
+                        
+                        await MainActor.run {
+                            withAnimation {
+                                selectedFolderIDs.removeAll()
+                                isEditing = false
+                            }
+                        }
                     }
                 }
                 Button("キャンセル", role: .cancel) {
@@ -116,10 +120,10 @@ struct MyTextbookView: View {
             } message: {
                 Text("選択中のフォルダーが削除されます。この操作は取り消せません。")
             }
+
         }
         .task {
             await viewModel.load()
-            print("\(viewModel.folders)")
         }
         .sheet(isPresented: $isShowingCreateFolderSheet) {
             CreateFolderView()

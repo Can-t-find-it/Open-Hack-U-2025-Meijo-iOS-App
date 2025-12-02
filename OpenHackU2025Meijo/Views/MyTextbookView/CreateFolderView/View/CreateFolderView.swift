@@ -2,6 +2,8 @@ import SwiftUI
 import AppColorTheme
 
 struct CreateFolderView: View {
+    @State private var viewModel = CreateFolderViewViewModel()
+    
     @State private var folderName: String = ""
     @FocusState private var isTextFieldFocused: Bool
 
@@ -21,9 +23,10 @@ struct CreateFolderView: View {
                     Spacer()
 
                     Button {
-                        // folderName が空でないときのみ実行
-                        // ここでフォルダ作成処理を入れる
-                        dismiss()
+                        Task {
+                            await viewModel.createFolder(name: folderName)
+                            dismiss()
+                        }
                     } label: {
                         Text("完了")
                             .foregroundColor(isFolderNameValid ? .blue : .gray) // 色の変化

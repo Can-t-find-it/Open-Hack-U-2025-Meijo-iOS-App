@@ -24,6 +24,14 @@ struct MyTextbookDetailView: View {
                 title: viewModel.textbook.name,
                 onBack: {
                     presentationMode.wrappedValue.dismiss()
+                },
+                onDelete: {
+                    Task {
+                        await viewModel.deleteTextbook()
+                        await MainActor.run {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
                 }
             )
             
@@ -105,7 +113,24 @@ struct MyTextbookDetailView: View {
                             .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
-                    QuestionList(questions: viewModel.textbook.questions)
+                    QuestionList(
+                        questions: viewModel.textbook.questions,
+                        onDeleteQuestion: { question in
+                            Task {
+                                await viewModel.deleteQuestion(questionId: question.id)
+                            }
+                        },
+                        onDeleteStatement: { statement in
+                            Task {
+                                await viewModel.deleteQuestionStatement(statementId: statement.id)
+                            }
+                        },
+                        onAddStatement: { question in
+                            Task {
+                                await viewModel.createQuestionStatement(questionId: question.id)
+                            }
+                        }
+                    )
                 }
                 .padding()
             }
@@ -118,7 +143,6 @@ struct MyTextbookDetailView: View {
         .ignoresSafeArea(.container, edges: .bottom)
         .task {
             await viewModel.load()
-            print("\(viewModel.textbook)")
         }
     }
     
@@ -212,17 +236,23 @@ struct MyTextbookDetailView: View {
                 .padding(.horizontal)
 
                 Button {
-                    let validWords = newWords
-                        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                        .filter { !$0.isEmpty }
+                    Task {
+                        let validWords = newWords
+                            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                            .filter { !$0.isEmpty }
 
-                    guard !validWords.isEmpty else { return }
+                        guard !validWords.isEmpty else { return }
 
-                    viewModel.addGeneratedQuestions(from: validWords)
+                        // 非同期で問題生成
+                        await viewModel.createQuestion(words: validWords)
 
-                    withAnimation {
-                        isAddingQuestions = false
-                        newWords = [""]
+                        // UI の更新はメインアクター上で
+                        await MainActor.run {
+                            withAnimation {
+                                isAddingQuestions = false
+                                newWords = [""]
+                            }
+                        }
                     }
                 } label: {
                     Image(systemName: "sparkles")

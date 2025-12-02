@@ -3,6 +3,7 @@ import SwiftUI
 struct TextbookDetailViewHeader: View {
     let title: String
     let onBack: () -> Void
+    let onDelete: () -> Void
     
     @State private var showDeleteTextbookAlert = false
     
@@ -48,6 +49,7 @@ struct TextbookDetailViewHeader: View {
                isPresented: $showDeleteTextbookAlert) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) {
+                onDelete()
                 onBack()
             }
         }
