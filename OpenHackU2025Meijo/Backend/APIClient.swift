@@ -39,6 +39,23 @@ struct APIClient {
             throw APIError.invalidStatusCode
         }
     }
+    
+    // デバイストークン登録
+    func registerDeviceToken(_ deviceToken: String) async throws {
+        let url = baseURL.appendingPathComponent("/device-token")
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = DeviceTokenRequest(deviceToken: deviceToken)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+        
+        try validate204(response)
+    }
+
 
     // サインアップ
     func signUp(name: String, email: String, password: String) async throws -> SignUpResponse {
@@ -493,6 +510,40 @@ struct APIClient {
     }
 
 }
+
+extension APIClient {
+    /// 保存されたトークンで自動ログインを試みる
+    /// 成功 = 204 / 失敗 = nil を返す
+    func tryAutoLogin() async -> Bool {
+        // トークンが保存されていなければ戻す
+        guard token != nil else { return false }
+        
+        // トークンチェック用のAPI（任意のエンドポイントを使ってOK）
+        let url = baseURL.appendingPathComponent("/autologin")
+        let request = authorizedRequest(url: url, method: "GET")
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            debugLog(request: request, data: nil, response: response)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return false
+            }
+
+            // 204 ならトークン有効
+            if httpResponse.statusCode == 204 {
+                return true
+            } else {
+                // トークン無効なので削除
+                UserDefaults.standard.removeObject(forKey: "auth_token")
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
+}
+
 
 // エラー種類をざっくり定義
 enum APIError: Error {

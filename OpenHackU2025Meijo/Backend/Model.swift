@@ -1,5 +1,13 @@
 import Foundation
 
+struct DeviceTokenRequest: Encodable {
+    let deviceToken: String
+
+    enum CodingKeys: String, CodingKey {
+        case deviceToken = "device_token"
+    }
+}
+
 struct SignUpRequest: Codable {
     let name: String
     let email: String

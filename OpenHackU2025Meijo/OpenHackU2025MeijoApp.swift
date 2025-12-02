@@ -38,9 +38,16 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenString = deviceToken.map { String(format: "%02x", $0) }.joined()
         print("APNs Device Token: \(tokenString)")
-
-        // ★ ここでサーバ or 一旦自分用にメモ
-        // 今回はまず Xcode のコンソールに出るので、それを SNS に手で貼ってテストするのが早いです
+        
+        Task {
+            do {
+                let api = APIClient()
+                try await api.registerDeviceToken(tokenString)
+                print("✅ device token registered")
+            } catch {
+                print("❌ failed to register device token:", error)
+            }
+        }
     }
     
     // 取得失敗
