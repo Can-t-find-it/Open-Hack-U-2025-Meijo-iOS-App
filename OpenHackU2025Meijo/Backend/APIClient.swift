@@ -40,6 +40,61 @@ struct APIClient {
         }
     }
 
+    // サインアップ
+    func signUp(name: String, email: String, password: String) async throws -> SignUpResponse {
+        let url = baseURL.appendingPathComponent("signup")
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = SignUpRequest(name: name, email: email, password: password)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(SignUpResponse.self, from: data)
+            
+            UserDefaults.standard.set(result.token, forKey: "auth_token")
+            
+            return result
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    // ログイン
+    func login(email: String, password: String) async throws -> SignUpResponse {
+        let url = baseURL.appendingPathComponent("login")
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = LoginRequest(email: email, password: password)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(SignUpResponse.self, from: data)
+            
+            UserDefaults.standard.set(result.token, forKey: "auth_token")
+            
+            return result
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
 
     // フォルダー一覧取得
     func fetchFolders() async throws -> [Folder] {

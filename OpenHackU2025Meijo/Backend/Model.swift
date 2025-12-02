@@ -1,5 +1,36 @@
 import Foundation
 
+struct SignUpRequest: Codable {
+    let name: String
+    let email: String
+    let password: String
+}
+
+struct SignUpUser: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let email: String
+    let iconUrl: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case email
+        case iconUrl = "icon_url"
+    }
+}
+
+struct SignUpResponse: Codable {
+    let token: String
+    let user: SignUpUser
+}
+
+struct LoginRequest: Codable {
+    let email: String
+    let password: String
+}
+
+
 struct FolderResponse: Codable {
     let folder: [Folder]
 }
