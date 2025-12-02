@@ -21,7 +21,7 @@ struct MyTextbookDetailView: View {
     var body: some View {
         VStack {
             TextbookDetailViewHeader(
-                title: viewModel.textbook.name,
+                title: viewModel.textbook.name.isEmpty ? textName : viewModel.textbook.name,
                 onBack: {
                     presentationMode.wrappedValue.dismiss()
                 },
@@ -37,100 +37,113 @@ struct MyTextbookDetailView: View {
             
             ScrollView {
                 VStack(spacing: 16) {
-                    
-                    TextbookScoreChart(data: viewModel.textbook.score)
-                    
-                    NavigationLink {
-                        QuizView(title: textName, questions: viewModel.textbook.questions)
-                    } label: {
-                        Text("学習開始")
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 12)
-                            .background(Color.pink.opacity(0.8))
-                            .cornerRadius(5)
-                    }
-                    
-                    HStack(spacing: 16) {
-                        VStack {
-                            Image(systemName: "square.3.layers.3d")
-                                .foregroundStyle(.blue)
-                            Text("\(viewModel.countQuestion(of: viewModel.textbook)) 問")
-                                .foregroundStyle(.white)
-                            Text("問題数")
-                                .foregroundStyle(.white)
+                    if viewModel.isLoading {
+                        // 🔸 ローディング中：Skeleton 表示
+                        SkeletonScoreChartView()
+                        SkeletonPrimaryButtonView()
+                        HStack(spacing: 16) {
+                            SkeletonStatCardView()
+                            SkeletonStatCardView()
+                            SkeletonStatCardView()
                         }
-                        .frame(maxWidth: .infinity)
-                        .cardBackground()
-
-                        VStack {
-                            Image(systemName: "flame.fill")
-                                .foregroundStyle(.red)
-                            Text("\(viewModel.textbook.times) 回")
+                        SkeletonToggleButtonView()
+                        SkeletonQuestionListView()
+                    } else {
+                        // 🔹 通常表示
+                        TextbookScoreChart(data: viewModel.textbook.score)
+                        
+                        NavigationLink {
+                            QuizView(title: textName, questions: viewModel.textbook.questions)
+                        } label: {
+                            Text("学習開始")
+                                .frame(maxWidth: .infinity)
                                 .foregroundStyle(.white)
-                            Text("学習回数")
-                                .foregroundStyle(.white)
+                                .padding(.vertical, 12)
+                                .background(Color.pink.opacity(0.8))
+                                .cornerRadius(5)
                         }
-                        .frame(maxWidth: .infinity)
-                        .cardBackground()
-
-                        VStack {
-                            Image(systemName: "chart.bar.xaxis")
-                                .foregroundStyle(.green)
-                            Text(viewModel.calcAverageScorePercent(of: viewModel.textbook.score))
-                                .foregroundStyle(.white)
-                            Text("平均")
-                                .foregroundStyle(.white)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .cardBackground()
-                    }
-                    .frame(maxWidth: .infinity)
-                    
-                    Button {
-                        withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
-                            isAddingQuestions.toggle()
-                        }
-                    } label: {
-                        ZStack {
-                            Text(isAddingQuestions ? "閉じる" : "問題を追加")
-                                .foregroundStyle(.white)
-
-                            HStack {
-                                Spacer()
-                                Image(systemName: isAddingQuestions ? "chevron.up" : "chevron.down")
+                        
+                        HStack(spacing: 16) {
+                            VStack {
+                                Image(systemName: "square.3.layers.3d")
+                                    .foregroundStyle(.blue)
+                                Text("\(viewModel.countQuestion(of: viewModel.textbook)) 問")
+                                    .foregroundStyle(.white)
+                                Text("問題数")
                                     .foregroundStyle(.white)
                             }
+                            .frame(maxWidth: .infinity)
+                            .cardBackground()
+
+                            VStack {
+                                Image(systemName: "flame.fill")
+                                    .foregroundStyle(.red)
+                                Text("\(viewModel.textbook.times) 回")
+                                    .foregroundStyle(.white)
+                                Text("学習回数")
+                                    .foregroundStyle(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .cardBackground()
+
+                            VStack {
+                                Image(systemName: "chart.bar.xaxis")
+                                    .foregroundStyle(.green)
+                                Text(viewModel.calcAverageScorePercent(of: viewModel.textbook.score))
+                                    .foregroundStyle(.white)
+                                Text("平均")
+                                    .foregroundStyle(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .cardBackground()
                         }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal)
-                        .background(Color.blue.opacity(0.8))
-                        .cornerRadius(5)
-                    }
-                    
-                    if isAddingQuestions {
-                        addWordsInlineSection
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                    }
-                    
-                    QuestionList(
-                        questions: viewModel.textbook.questions,
-                        onDeleteQuestion: { question in
-                            Task {
-                                await viewModel.deleteQuestion(questionId: question.id)
+                        .frame(maxWidth: .infinity)
+                        
+                        Button {
+                            withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
+                                isAddingQuestions.toggle()
                             }
-                        },
-                        onDeleteStatement: { statement in
-                            Task {
-                                await viewModel.deleteQuestionStatement(statementId: statement.id)
+                        } label: {
+                            ZStack {
+                                Text(isAddingQuestions ? "閉じる" : "問題を追加")
+                                    .foregroundStyle(.white)
+
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: isAddingQuestions ? "chevron.up" : "chevron.down")
+                                        .foregroundStyle(.white)
+                                }
                             }
-                        },
-                        onAddStatement: { question in
-                            Task {
-                                await viewModel.createQuestionStatement(questionId: question.id)
-                            }
+                            .padding(.vertical, 12)
+                            .padding(.horizontal)
+                            .background(Color.blue.opacity(0.8))
+                            .cornerRadius(5)
                         }
-                    )
+                        
+                        if isAddingQuestions {
+                            addWordsInlineSection
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
+                        
+                        QuestionList(
+                            questions: viewModel.textbook.questions,
+                            onDeleteQuestion: { question in
+                                Task {
+                                    await viewModel.deleteQuestion(questionId: question.id)
+                                }
+                            },
+                            onDeleteStatement: { statement in
+                                Task {
+                                    await viewModel.deleteQuestionStatement(statementId: statement.id)
+                                }
+                            },
+                            onAddStatement: { question in
+                                Task {
+                                    await viewModel.createQuestionStatement(questionId: question.id)
+                                }
+                            }
+                        )
+                    }
                 }
                 .padding()
             }
@@ -145,6 +158,8 @@ struct MyTextbookDetailView: View {
             await viewModel.load()
         }
     }
+    
+    // MARK: - 問題追加セクション（既存そのまま）
     
     private var addWordsInlineSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -243,10 +258,8 @@ struct MyTextbookDetailView: View {
 
                         guard !validWords.isEmpty else { return }
 
-                        // 非同期で問題生成
                         await viewModel.createQuestion(words: validWords)
 
-                        // UI の更新はメインアクター上で
                         await MainActor.run {
                             withAnimation {
                                 isAddingQuestions = false
@@ -264,7 +277,47 @@ struct MyTextbookDetailView: View {
         .padding()
         .cardBackground()
     }
+}
 
+struct SkeletonPrimaryButtonView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 5)
+            .fill(Color.white.opacity(0.2))
+            .frame(height: 44)
+            .shimmer()
+    }
+}
+
+/// 下の 3 つの stats カード用 Skeleton（カード1枚）
+struct SkeletonStatCardView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.white.opacity(0.25))
+                .frame(width: 24, height: 24)
+
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.white.opacity(0.35))
+                .frame(width: 40, height: 14)
+
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.white.opacity(0.25))
+                .frame(width: 36, height: 12)
+        }
+        .frame(maxWidth: .infinity)
+        .cardBackground()
+        .shimmer()
+    }
+}
+
+/// 「問題を追加」ボタンの Skeleton
+struct SkeletonToggleButtonView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 5)
+            .fill(Color.white.opacity(0.2))
+            .frame(height: 44)
+            .shimmer()
+    }
 }
 
 

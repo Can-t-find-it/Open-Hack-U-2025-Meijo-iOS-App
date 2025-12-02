@@ -47,6 +47,39 @@ struct TextbookScoreChart: View {
     }
 }
 
+struct SkeletonScoreChartView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // タイトルっぽい棒
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.white.opacity(0.35))
+                .frame(width: 120, height: 16)
+
+            // グラフ領域
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white.opacity(0.15))
+                .frame(height: 180)
+                .overlay {
+                    HStack(alignment: .bottom, spacing: 8) {
+                        ForEach(0..<7) { _ in
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.white.opacity(0.25))
+                                .frame(width: 14, height: CGFloat.random(in: 40...140))
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
+                }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.white.opacity(0.1))
+        )
+        .shimmer() // ← さっき作った shimmer() をそのまま使用
+    }
+}
+
 
 #Preview {
 //    MyTextbookDetailView(textbook: feMock)

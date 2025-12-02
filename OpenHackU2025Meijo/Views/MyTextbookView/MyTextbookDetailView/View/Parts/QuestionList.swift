@@ -155,6 +155,53 @@ private struct QuestionCard: View {
     }
 }
 
+struct SkeletonQuestionRowView: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.white.opacity(0.25))
+                .frame(width: 32, height: 32)
+
+            VStack(alignment: .leading, spacing: 6) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.35))
+                    .frame(height: 12)
+
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.25))
+                    .frame(width: 160, height: 10)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+}
+
+struct SkeletonQuestionListView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.white.opacity(0.35))
+                .frame(width: 100, height: 14) //「問題一覧」みたいなラベル用
+
+            VStack(spacing: 0) {
+                ForEach(0..<6) { _ in
+                    SkeletonQuestionRowView()
+                }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white.opacity(0.08))
+            )
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 16)
+        .shimmer()
+    }
+}
+
 //
 //#Preview {
 //    MyTextbookDetailView(textbook: feMock)
