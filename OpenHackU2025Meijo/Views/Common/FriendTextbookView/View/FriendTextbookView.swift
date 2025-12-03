@@ -58,15 +58,11 @@ struct FriendTextbookView: View {
             )
             
             ScrollView {
-                
                 VStack(alignment: .leading, spacing: 16) {
                     if viewModel.isLoading {
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
+                        ForEach(0..<3) { _ in
+                            SkeletonQuestionCard()
                         }
-                        .padding()
                     } else if let error = viewModel.errorMessage {
                         Text(error)
                             .foregroundStyle(.red)
@@ -182,12 +178,7 @@ struct FriendTextbookView: View {
                     .padding(.top)
                 
                 if viewModel.isLoading {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
-                    .padding()
+                    SkeletonFolderList()
                 } else if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundStyle(.red)
@@ -217,7 +208,6 @@ struct FriendTextbookView: View {
                 }
                 
                 Button {
-                    // 選択中フォルダーを取得
                     if let id = selectedFolderID,
                        let folder = viewModel.folders.first(where: { $0.id == id }) {
                         
@@ -250,9 +240,108 @@ struct FriendTextbookView: View {
             }
         }
     }
+}
 
+struct SkeletonQuestionCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            
+            // 「問題」チップ＋本文エリア
+            HStack(alignment: .top, spacing: 8) {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.pink.opacity(0.6))
+                    .frame(width: 48, height: 22)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                    )
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(0..<2) { _ in
+                        VStack(alignment: .leading, spacing: 6) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.white.opacity(0.45))
+                                .frame(height: 12)
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.white.opacity(0.25))
+                                .frame(width: 180, height: 10)
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.white.opacity(0.2))
+                                .frame(width: 160, height: 10)
+                        }
+                    }
+                }
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top, 12)
+            
+            // 「解答」行
+            HStack(alignment: .top, spacing: 8) {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
+                    .frame(width: 48, height: 22)
+                
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.4))
+                    .frame(width: 80, height: 12)
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground()
+        .shimmer()
+    }
+}
+
+struct SkeletonFolderRow: View {
+    var body: some View {
+        HStack {
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.white.opacity(0.4))
+                .frame(width: 140, height: 14)
+            
+            Spacer()
+            
+            Circle()
+                .stroke(Color.white.opacity(0.3), lineWidth: 2)
+                .frame(width: 20, height: 20)
+        }
+        .padding(.vertical, 8)
+    }
+}
+
+struct SkeletonFolderList: View {
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(0..<5) { index in
+                SkeletonFolderRow()
+                
+                if index != 4 {
+                    Divider()
+                        .background(Color.white.opacity(0.15))
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white.opacity(0.05))
+        )
+        .shimmer()
+    }
 }
 
 #Preview {
-    FriendTextbookView(userName: "しまけん", textName: "基本情報技術者試験", textId: "11")
+    FriendTextbookView(
+        userName: "しまけん",
+        textName: "基本情報技術者試験",
+        textId: "11"
+    )
 }
