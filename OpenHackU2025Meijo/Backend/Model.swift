@@ -168,10 +168,10 @@ struct FriendStudyLog: Codable, Identifiable {
 struct MyAccountResponse: Codable {
     let id: String
     let name: String
-    let stats: UserStats
+    let status: UserStatus
 }
 
-struct UserStats: Codable {
+struct UserStatus: Codable {
     let textbookCount: Int
     let streakDays: Int
     let friendCount: Int
@@ -205,3 +205,39 @@ struct Friend: Codable, Identifiable {
     let id: Int
     let name: String
 }
+
+struct GeneratedQuestionStatement: Codable, Identifiable {
+    let id: String
+    let questionStatement: String
+    let choices: [String]
+    let explanation: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case questionStatement
+        case choices
+        case explanation = "explain"
+    }
+}
+
+struct GeneratedQuestion: Codable, Identifiable {
+    let id: String
+    let questionStatements: [GeneratedQuestionStatement]
+    let answer: String
+}
+
+struct GeneratedTextbook: Codable {
+    let id: String
+    let name: String
+    let type: String
+    let questions: [GeneratedQuestion]
+}
+
+struct CreateTextbookFromFileResponse: Codable {
+    let textbook: GeneratedTextbook
+}
+
+struct CreateSuggestWordFromFileResponse: Codable {
+    let extractWords: [String]
+}
+

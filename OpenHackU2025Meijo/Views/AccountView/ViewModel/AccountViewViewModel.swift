@@ -15,15 +15,15 @@ final class AccountViewViewModel {
     }
 
     var textbookCount: Int {
-        account?.stats.textbookCount ?? 0
+        account?.status.textbookCount ?? 0
     }
 
     var streakDays: Int {
-        account?.stats.streakDays ?? 0
+        account?.status.streakDays ?? 0
     }
 
     var friendCount: Int {
-        account?.stats.friendCount ?? 0
+        account?.status.friendCount ?? 0
     }
 
     private let apiClient = APIClient()

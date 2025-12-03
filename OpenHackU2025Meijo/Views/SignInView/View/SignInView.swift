@@ -33,10 +33,10 @@ struct SignInView: View {
                 // 上半分：アイコン
                 VStack {
                     Spacer()
-                    Image("icon")
+                    Image("icon1")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 160, height: 160)
+                        .frame(width: 300, height: 300)
                     Spacer()
                 }
                 .frame(maxHeight: .infinity)

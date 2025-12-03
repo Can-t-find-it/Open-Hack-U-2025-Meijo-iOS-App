@@ -8,6 +8,9 @@ struct MyTextbookDetailView: View {
     
     @State private var isAddingQuestions = false
     @State private var newWords: [String] = [""]
+    @State private var selectedFileURL: URL?
+    @State private var isShowingDocumentPicker = false
+    @State private var isPdfExtractSended = false
     
     let textName: String
     let textId: String
@@ -103,6 +106,11 @@ struct MyTextbookDetailView: View {
                             withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
                                 isAddingQuestions.toggle()
                             }
+                            if isAddingQuestions {
+                                isPdfExtractSended = false
+                                selectedFileURL = nil
+                                viewModel.pdfWords = []
+                            }
                         } label: {
                             ZStack {
                                 Text(isAddingQuestions ? "閉じる" : "問題を追加")
@@ -127,6 +135,8 @@ struct MyTextbookDetailView: View {
                         
                         QuestionList(
                             questions: viewModel.textbook.questions,
+                            addingStatementQuestionId: viewModel.addingStatementQuestionId,
+                            addStatementProgress: viewModel.addStatementProgress,
                             onDeleteQuestion: { question in
                                 Task {
                                     await viewModel.deleteQuestion(questionId: question.id)
@@ -154,12 +164,13 @@ struct MyTextbookDetailView: View {
         .tabBarHidden(true)
         .navigationBarHidden(true)
         .ignoresSafeArea(.container, edges: .bottom)
+        .sheet(isPresented: $isShowingDocumentPicker) {
+            DocumentPicker(selectedFileURL: $selectedFileURL)
+        }
         .task {
             await viewModel.start()
         }
     }
-    
-    // MARK: - 問題追加セクション（既存そのまま）
     
     private var addWordsInlineSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -194,6 +205,110 @@ struct MyTextbookDetailView: View {
             }
             .font(.headline)
             .foregroundStyle(.blue)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("ファイルから単語を抽出")
+                    .foregroundStyle(.white)
+                    .font(.headline)
+                
+                HStack {
+                    let isDisabled = (selectedFileURL != nil)
+
+                    Button {
+                        guard !isDisabled else { return }
+                        isShowingDocumentPicker = true
+                    } label: {
+                        Text("ファイルを選択")
+                            .foregroundStyle(isDisabled ? .gray : .blue)
+                            .font(.subheadline)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(isDisabled ? Color.gray : Color.blue,
+                                            lineWidth: 1)
+                            )
+                    }
+                    .disabled(isDisabled)
+                    
+                    Spacer()
+                    
+                    let canSend = (selectedFileURL != nil) && !viewModel.isExtractingFromPDF && !isPdfExtractSended
+
+                    Button {
+                        Task {
+                            guard let fileURL = selectedFileURL else { return }
+                            await viewModel.fetchExtractWords(from: fileURL)
+                            isPdfExtractSended = true
+                        }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.title3)
+                            Text(viewModel.isExtractingFromPDF ? "送信中…" : "送信")
+                                .font(.subheadline)
+                                .bold()
+                        }
+                        .foregroundStyle(canSend ? .white : .gray)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            canSend
+                            ? Color.blue.opacity(0.8)
+                            : Color.gray.opacity(0.3)
+                        )
+                        .cornerRadius(8)
+                        .shadow(radius: canSend ? 1 : 0)
+                    }
+                    .disabled(!canSend)
+                }
+
+                
+                
+                if let url = selectedFileURL {
+                    Text("選択されたファイル: \(url.lastPathComponent)")
+                        .foregroundStyle(.gray)
+                        .font(.footnote)
+                }
+                
+                if viewModel.isExtractingFromPDF {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("PDF から単語を抽出中…")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.8))
+                        
+                        ProgressView(value: viewModel.extractProgress)
+                            .progressViewStyle(.linear)
+                    }
+                } else if !viewModel.pdfWords.isEmpty {
+                    Text("PDF からの抽出が完了しました")
+                        .font(.caption)
+                        .foregroundStyle(.green.opacity(0.8))
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(viewModel.pdfWords, id: \.self) { word in
+                            Button {
+                                
+                            } label: {
+                                Text(word)
+                                    .foregroundStyle(.blue)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Group {
+                                            Capsule()
+                                                .stroke(Color.blue.opacity(0.8), lineWidth: 1)
+                                        }
+                                    )
+                            }
+                        }
+                    }
+                }
+                
+            }
+            .padding(.top, 16)
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("AIからの提案")
@@ -246,9 +361,16 @@ struct MyTextbookDetailView: View {
                     withAnimation {
                         isAddingQuestions = false
                         newWords = [""]
+                        isPdfExtractSended = false
+                        selectedFileURL = nil
+                        viewModel.pdfWords = []
                     }
                 }
                 .padding(.horizontal)
+                
+                let canGenerate = newWords.contains {
+                    !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                }
 
                 Button {
                     Task {
@@ -264,14 +386,35 @@ struct MyTextbookDetailView: View {
                             withAnimation {
                                 isAddingQuestions = false
                                 newWords = [""]
+                                isPdfExtractSended = false
+                                selectedFileURL = nil
+                                viewModel.pdfWords = []
                             }
                         }
                     }
                 } label: {
-                    Image(systemName: "sparkles")
-                    Text("問題を生成")
+                    HStack {
+                        Image(systemName: "sparkles")
+                        Text(viewModel.isGeneratingQuestions ? "生成中…" : "問題を生成")
+                    }
+                    .foregroundStyle(
+                        (canGenerate && !viewModel.isGeneratingQuestions) ? .blue : .gray
+                    )
                 }
-                .padding(.horizontal)
+                .disabled(!canGenerate || viewModel.isGeneratingQuestions)
+            }
+            
+            if viewModel.isGeneratingQuestions {
+                VStack(alignment: .trailing, spacing: 6) {
+                    Text("問題を生成中…")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.8))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    
+                    ProgressView(value: viewModel.generateProgress)
+                        .progressViewStyle(.linear)
+                }
+                .padding(.top, 4)
             }
         }
         .padding()

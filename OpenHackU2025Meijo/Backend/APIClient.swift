@@ -9,7 +9,7 @@ struct APIClient {
         #else
         // Mac の LAN IP を使う
 //        return URL(string: "http://192.168.1.69:3658/m1/1133790-1125856-default")!
-        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")! // 54.95.221.66:8080
+        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")! // http://54.95.221.66:8080/api/
         #endif
     }()
     
@@ -216,7 +216,7 @@ struct APIClient {
     // 問題の追加
     func createQuestion(textId: String, words: [String]) async throws {
         let url = baseURL
-            .appendingPathComponent("question")
+            .appendingPathComponent("create-question")
             .appendingPathComponent(textId)
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -247,7 +247,7 @@ struct APIClient {
     // 問題文を追加
     func createQuestionStatement(questionId: String) async throws {
         let url = baseURL
-            .appendingPathComponent("question-statement")
+            .appendingPathComponent("create-question-statement")
             .appendingPathComponent(questionId)
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -483,7 +483,6 @@ struct APIClient {
         }
     }
     
-    
     private func debugLog(request: URLRequest, data: Data?, response: URLResponse?) {
         print("----- API DEBUG LOG -----")
 
@@ -527,6 +526,127 @@ struct APIClient {
     }
 
 }
+
+extension APIClient {
+    func createTextbookFromFile(
+        name: String,
+        type: String,
+        folderId: String,
+        fileURL: URL
+    ) async throws -> CreateTextbookFromFileResponse {
+        let url = baseURL.appendingPathComponent("/upload_pdf")
+
+        var request = authorizedRequest(url: url, method: "POST")
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        let fileData = try Data(contentsOf: fileURL)
+        let filename = fileURL.lastPathComponent
+        let mimeType = "application/pdf"
+
+        var body = Data()
+
+        func append(_ string: String) {
+            body.append(string.data(using: .utf8)!)
+        }
+
+        // name
+        append("--\(boundary)\r\n")
+        append("Content-Disposition: form-data; name=\"name\"\r\n\r\n")
+        append("\(name)\r\n")
+
+        // type
+        append("--\(boundary)\r\n")
+        append("Content-Disposition: form-data; name=\"type\"\r\n\r\n")
+        append("\(type)\r\n")
+
+        // folder_id
+        append("--\(boundary)\r\n")
+        append("Content-Disposition: form-data; name=\"folder_id\"\r\n\r\n")
+        append("\(folderId)\r\n")
+
+        // file
+        append("--\(boundary)\r\n")
+        append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
+        append("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(fileData)
+        append("\r\n")
+
+        // 終端
+        append("--\(boundary)--\r\n")
+
+        request.httpBody = body
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            let result = try JSONDecoder().decode(CreateTextbookFromFileResponse.self, from: data)
+            return result
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    func createSuggestWordFromFile(
+        textbookId: String,
+        fileURL: URL
+    ) async throws -> [String] {
+        let url = baseURL
+            .appendingPathComponent("suggest-words-file")
+            .appendingPathComponent(textbookId)
+
+        var request = authorizedRequest(url: url, method: "POST")
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        let fileData = try Data(contentsOf: fileURL)
+        let filename = fileURL.lastPathComponent
+        let mimeType = "application/pdf"
+
+        var body = Data()
+
+        func append(_ string: String) {
+            body.append(string.data(using: .utf8)!)
+        }
+
+        // file だけ送る
+        append("--\(boundary)\r\n")
+        append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
+        append("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(fileData)
+        append("\r\n")
+
+        // 終端
+        append("--\(boundary)--\r\n")
+
+        request.httpBody = body
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+
+        do {
+            let result = try JSONDecoder().decode(CreateSuggestWordFromFileResponse.self, from: data)
+            return result.extractWords          // ← ここで [String] にして返す
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+}
+
+
 
 extension APIClient {
     /// 保存されたトークンで自動ログインを試みる

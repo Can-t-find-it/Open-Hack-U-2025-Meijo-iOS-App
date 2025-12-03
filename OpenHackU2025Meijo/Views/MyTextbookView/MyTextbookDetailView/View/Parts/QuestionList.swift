@@ -3,6 +3,9 @@ import SwiftUI
 struct QuestionList: View {
     let questions: [Question]
     
+    let addingStatementQuestionId: String?
+    let addStatementProgress: Double
+    
     let onDeleteQuestion: (Question) -> Void
     let onDeleteStatement: (QuestionStatement) -> Void
     let onAddStatement: (Question) -> Void
@@ -12,6 +15,8 @@ struct QuestionList: View {
             ForEach(questions) { question in
                 QuestionCard(
                     question: question,
+                    isAddingStatement: addingStatementQuestionId == question.id,
+                    addStatementProgress: addStatementProgress,
                     onDeleteQuestion: { onDeleteQuestion(question) },
                     onDeleteStatement: { statement in
                         onDeleteStatement(statement)
@@ -28,6 +33,9 @@ struct QuestionList: View {
 
 private struct QuestionCard: View {
     let question: Question
+    
+    let isAddingStatement: Bool
+    let addStatementProgress: Double
     
     let onDeleteQuestion: () -> Void
     let onDeleteStatement: (QuestionStatement) -> Void
@@ -132,7 +140,20 @@ private struct QuestionCard: View {
             .font(.subheadline)
             .foregroundStyle(.blue)
             .padding(.horizontal)
-            .padding(.bottom, 12)
+            .padding(.bottom, 8)
+            
+            if isAddingStatement {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("問題文を追加中…")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.8))
+                    
+                    ProgressView(value: addStatementProgress)
+                        .progressViewStyle(.linear)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 8)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardBackground() // ← プロジェクトの既存 Modifier を利用
