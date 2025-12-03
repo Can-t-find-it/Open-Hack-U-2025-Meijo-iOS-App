@@ -41,6 +41,13 @@ struct Textbook: Identifiable, Codable {
     let type: String
 }
 
+struct CreateTextbookRequest: Codable {
+    let name: String
+    let type: String
+    let folderId: String
+}
+
+
 struct CreateFolderRequest: Codable {
     let folderName: String
 }

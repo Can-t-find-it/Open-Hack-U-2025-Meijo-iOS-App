@@ -183,6 +183,23 @@ struct APIClient {
         }
     }
     
+    // 問題集作成
+    func createTextbook(name: String, type: String, folderId: String) async throws {
+        let url = baseURL.appendingPathComponent("textbook")
+
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body = CreateTextbookRequest(name: name, type: type, folderId: folderId)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+
+        try validate204(response)
+    }
+
+    
     // 問題集削除
     func deleteTextbook(textId: String) async throws {
         let url = baseURL

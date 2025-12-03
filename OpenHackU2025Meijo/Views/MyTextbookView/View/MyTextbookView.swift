@@ -213,7 +213,7 @@ struct FolderContainView: View {
         .fullBackground()
         .navigationBarHidden(true)
         .sheet(isPresented: $isShowingCreateTextbookSheet) {
-            CreateTextbookView()
+            CreateTextbookView(folderId: String(describing: folder.id))
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }

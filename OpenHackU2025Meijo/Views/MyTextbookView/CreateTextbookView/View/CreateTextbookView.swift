@@ -4,37 +4,33 @@ import AppColorTheme
 
 struct CreateTextbookView: View {
     @State private var textbookName: String = ""
-    
     @FocusState private var isTextFieldFocused: Bool
-
+    
     @Environment(\.dismiss) private var dismiss
     
     @State private var isShowingDocumentPicker = false
     @State private var selectedFileURL: URL?
     
+    @State private var viewModel = CreateTextbookViewViewModel()
+    
+    let folderId: String
+    
     enum QuestionFormat: String, CaseIterable {
-        case auto = "おまかせ"
         case oneQA = "一問一答"
         case fillBlank = "穴埋め"
     }
 
     enum AnswerMethod: String, CaseIterable {
-        case auto = "おまかせ"
         case fourChoices = "4択問題"
         case input = "解答入力"
     }
-
-    enum QuestionCount: CaseIterable {
-        case auto, few, normal, many
-    }
     
-    @State private var selectedQuestionFormat: QuestionFormat = .auto
-    @State private var selectedAnswerMethod: AnswerMethod = .auto
-    @State private var selectedQuestionCount: QuestionCount = .auto
-
+    @State private var selectedQuestionFormat: QuestionFormat = .oneQA
+    @State private var selectedAnswerMethod: AnswerMethod = .fourChoices
     
     var body: some View {
         VStack {
+            // ヘッダー
             ZStack {
                 HStack {
                     Button {
@@ -47,7 +43,14 @@ struct CreateTextbookView: View {
                     Spacer()
 
                     Button {
-                        dismiss()
+                        Task {
+                            await viewModel.createTextbook(
+                                name: textbookName,
+                                type: selectedType,
+                                folderId: folderId
+                            )
+                            dismiss()
+                        }
                     } label: {
                         Text("完了")
                             .foregroundColor(isTextbookNameValid ? .blue : .gray)
@@ -55,13 +58,14 @@ struct CreateTextbookView: View {
                     .disabled(!isTextbookNameValid)
                 }
                 
-                Text("問題集作成")
+                Text("空の問題集を作成")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
             }
             .padding()
             
+            // 問題集名
             TextField("問題集名を入力", text: $textbookName)
                 .padding()
                 .foregroundColor(.white)
@@ -76,7 +80,9 @@ struct CreateTextbookView: View {
                 .padding(.horizontal, 16)
                 .focused($isTextFieldFocused)
             
+            // 設定項目
             VStack(alignment: .leading, spacing: 24) {
+                // 問題形式
                 VStack(alignment: .leading) {
                     Text("問題形式")
                         .foregroundStyle(.white)
@@ -106,7 +112,7 @@ struct CreateTextbookView: View {
                     }
                 }
 
-                
+                // 解答方法
                 VStack(alignment: .leading) {
                     Text("解答方法")
                         .foregroundStyle(.white)
@@ -135,53 +141,11 @@ struct CreateTextbookView: View {
                         }
                     }
                 }
-
-                
-                VStack(alignment: .leading) {
-                    Text("問題数")
-                        .foregroundStyle(.white)
-                    
-                    HStack {
-                        questionCountButton(.auto,
-                                            title: "おまかせ",
-                                            subtitle: "自動的に設定")
-                        
-                        questionCountButton(.few,
-                                            title: "少なめ",
-                                            subtitle: "5問程度")
-                        
-                        questionCountButton(.normal,
-                                            title: "普通",
-                                            subtitle: "10問程度")
-                        
-                        questionCountButton(.many,
-                                            title: "多め",
-                                            subtitle: "20問程度")
-                    }
-                }
-
-                
-                Button(action: {
-                    isShowingDocumentPicker = true
-                }) {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                        Text("ファイルを追加")
-                            .fontWeight(.semibold)
-                    }
-                    .foregroundStyle(.blue)
-                }
-
-                if let url = selectedFileURL {
-                    Text("選択されたファイル: \(url.lastPathComponent)")
-                        .foregroundStyle(.gray)
-                        .font(.footnote)
-                }
-
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
             .padding(.vertical)
-            
+
             Spacer()
         }
         .background(AppColorToken.background.surface)
@@ -190,88 +154,33 @@ struct CreateTextbookView: View {
                 isTextFieldFocused = true
             }
         }
-        .sheet(isPresented: $isShowingDocumentPicker) {
-            DocumentPicker(selectedFileURL: $selectedFileURL)
-        }
     }
     
+    /// タイトルが空白だけでないか
     private var isTextbookNameValid: Bool {
         !textbookName.trimmingCharacters(in: .whitespaces).isEmpty
     }
     
-    @ViewBuilder
-    private func questionCountButton(_ count: QuestionCount,
-                                     title: String,
-                                     subtitle: String) -> some View {
-        let isSelected = (selectedQuestionCount == count)
-        
-        Button {
-            selectedQuestionCount = count
-        } label: {
-            VStack {
-                Text(title)
-                    .foregroundStyle(isSelected ? .white : .pink)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(
-                        Capsule()
-                            .fill(isSelected ? Color.pink.opacity(0.8) : .clear)
-                    )
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.pink.opacity(0.8),
-                                    lineWidth: isSelected ? 0 : 1)
-                    )
-                
-                Text(subtitle)
-                    .foregroundStyle(.gray)
-                    .font(.callout)
-            }
-        }
-    }
-
-}
-
-
-struct DocumentPicker: UIViewControllerRepresentable {
-    @Environment(\.dismiss) private var dismiss
-    @Binding var selectedFileURL: URL?
-
-    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        // 受け付けるファイルタイプを指定（ここでは何でもOKな例）
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.data], asCopy: true)
-        picker.delegate = context.coordinator
-        picker.allowsMultipleSelection = false
-        return picker
-    }
-
-    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, UIDocumentPickerDelegate {
-        let parent: DocumentPicker
-
-        init(_ parent: DocumentPicker) {
-            self.parent = parent
-        }
-
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            parent.selectedFileURL = urls.first
-            print("選択されたファイル: \(urls.first?.lastPathComponent ?? "なし")")
-            parent.dismiss()
-        }
-
-        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            print("キャンセルされました")
-            parent.dismiss()
+    /// 選択された組み合わせから type 文字列を生成
+    ///
+    /// - 一問一答 × 4択問題 = "4択問題形式"
+    /// - 一問一答 × 解答入力 = "入力形式"
+    /// - 穴埋め   × 4択問題 = "穴埋めの4択"
+    /// - 穴埋め   × 解答入力 = "穴埋め入力"
+    private var selectedType: String {
+        switch (selectedQuestionFormat, selectedAnswerMethod) {
+        case (.oneQA, .fourChoices):
+            return "4択問題形式"
+        case (.oneQA, .input):
+            return "入力形式"
+        case (.fillBlank, .fourChoices):
+            return "穴埋めの4択"
+        case (.fillBlank, .input):
+            return "穴埋め入力"
         }
     }
 }
-
 
 #Preview {
-    CreateTextbookView()
+    CreateTextbookView(folderId: "105")
 }
