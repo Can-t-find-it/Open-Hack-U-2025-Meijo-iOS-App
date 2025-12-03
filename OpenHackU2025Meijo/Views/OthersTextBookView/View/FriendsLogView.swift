@@ -46,7 +46,7 @@ struct FriendsLogView: View {
             }
             .fullBackground()
             .task {
-                await viewModel.load()
+                await viewModel.start()
             }
         }
     }

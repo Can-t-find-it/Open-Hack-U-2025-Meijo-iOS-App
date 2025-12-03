@@ -95,7 +95,7 @@ struct FriendTextbookView: View {
         .navigationBarHidden(true)
         .ignoresSafeArea(.container, edges: .bottom)
         .task {
-            await viewModel.load()
+            await viewModel.start()
         }
         .sheet(isPresented: $isShowingFolderSelectSheet) {
             folderSelectSheet

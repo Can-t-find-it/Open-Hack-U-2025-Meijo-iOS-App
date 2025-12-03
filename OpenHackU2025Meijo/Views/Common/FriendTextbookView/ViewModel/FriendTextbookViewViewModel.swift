@@ -14,6 +14,8 @@ final class FriendTextbookViewViewModel {
     
     var isLoading: Bool = false
     var errorMessage: String? = nil
+    
+    var isInitialDelay: Bool = true
 
     private let apiClient = APIClient()
     
@@ -21,6 +23,15 @@ final class FriendTextbookViewViewModel {
     
     init(textId: String) {
         self.textId = textId
+    }
+    
+    func start() async {
+        isLoading = true
+        
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        isInitialDelay = false
+        
+        await load()
     }
 
     func load() async {

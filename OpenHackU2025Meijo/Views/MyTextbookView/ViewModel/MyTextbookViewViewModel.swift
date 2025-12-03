@@ -7,8 +7,18 @@ final class MyTextbookViewViewModel {
     var folders: [Folder] = []
     var isLoading: Bool = false
     var errorMessage: String? = nil
+    var isInitialDelay: Bool = true
 
     private let apiClient = APIClient()
+    
+    func start() async {
+        isLoading = true
+        
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        isInitialDelay = false
+        
+        await load()
+    }
 
     func load() async {
         isLoading = true

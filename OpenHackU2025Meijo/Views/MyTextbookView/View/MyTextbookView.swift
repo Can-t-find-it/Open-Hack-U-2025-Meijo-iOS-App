@@ -126,7 +126,7 @@ struct MyTextbookView: View {
 
         }
         .task {
-            await viewModel.load()
+            await viewModel.start()
         }
         .sheet(isPresented: $isShowingCreateFolderSheet) {
             CreateFolderView()

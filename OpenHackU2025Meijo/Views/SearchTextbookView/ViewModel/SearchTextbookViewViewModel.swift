@@ -6,10 +6,10 @@ import Observation
 final class FriendsTextbooksViewViewModel {
     // 友達ごとの問題集一覧
     var friends: [FriendTextbooks] = []
-    
-    // ローディング & エラー
     var isLoading: Bool = false
     var errorMessage: String? = nil
+    
+    var isInitialDelay: Bool = true
     
     var allTextbookNames: [String] {
         Array(
@@ -27,6 +27,15 @@ final class FriendsTextbooksViewViewModel {
     }
 
     private let apiClient = APIClient()
+    
+    func start() async {
+        isLoading = true
+        
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        isInitialDelay = false
+        
+        await load()
+    }
     
     // 一覧取得
     func load() async {

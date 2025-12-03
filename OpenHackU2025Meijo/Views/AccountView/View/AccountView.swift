@@ -56,7 +56,7 @@ struct AccountView: View {
             }
             .fullBackground()
             .task {
-                await viewModel.load()
+                await viewModel.start()
             }
         }
     }

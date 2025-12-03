@@ -148,7 +148,7 @@ struct SearchTextbookView: View {
             .fullBackground()
             .ignoresSafeArea(edges: .bottom)
             .task {
-                await viewModel.load()
+                await viewModel.start()
             }
         }
     }

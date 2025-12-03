@@ -10,7 +10,8 @@ struct TopView: View {
     
     @State private var isForward: Bool = true
     
-    @State var ShowSignInView: Bool = true
+//    @State var ShowSignInView: Bool = true // 本来はこっち
+    @State var ShowSignInView: Bool = false
 
     var body: some View {
         ZStack { // コンテンツ表示部分
