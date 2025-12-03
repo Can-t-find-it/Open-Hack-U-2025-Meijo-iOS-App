@@ -15,9 +15,8 @@ struct FriendsLogView: View {
                     
                     Group {
                         if viewModel.isLoading {
-                            ProgressView()
-                                .tint(.white)
-                                .padding()
+                            SkeletonFriendsLogListView()
+                                .padding(.top, 4)
                         } else if let error = viewModel.errorMessage {
                             Text(error)
                                 .foregroundStyle(.red)
@@ -52,6 +51,7 @@ struct FriendsLogView: View {
         }
     }
 }
+
 
 #Preview {
     FriendsLogView()
