@@ -9,6 +9,8 @@ struct TopView: View {
     @State private var isTabBarHidden: Bool = false
     
     @State private var isForward: Bool = true
+    
+    @State var ShowSignInView: Bool = true
 
     var body: some View {
         ZStack { // コンテンツ表示部分
@@ -34,6 +36,9 @@ struct TopView: View {
             .opacity(isTabBarHidden ? 0 : 1)
         }
         .fullBackground()
+        .fullScreenCover(isPresented: $ShowSignInView) {
+            SignInView()
+        }
     }
 
     // 画面本体
