@@ -89,6 +89,50 @@ struct StudyLogRowView: View {
     }
 }
 
+struct SkeletonStudyLogRowView: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.white.opacity(0.3))
+                .frame(width: 40, height: 40)  // アイコン or 日付バッジっぽい
+            
+            VStack(alignment: .leading, spacing: 6) {
+                // タイトル（教材名など）
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.5))
+                    .frame(width: 160, height: 12)
+                
+                // 日付やスコア
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.3))
+                    .frame(width: 120, height: 10)
+            }
+            
+            Spacer()
+            
+            // 右側の数値（スコア or 時間）
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.white.opacity(0.4))
+                .frame(width: 40, height: 14)
+        }
+        .padding(.vertical, 6)
+        .cardBackground()
+        .shimmer()
+    }
+}
+
+/// 複数行の Skeleton ログ一覧
+struct SkeletonStudyLogListView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            ForEach(0..<6) { _ in
+                SkeletonStudyLogRowView()
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
 #Preview {
     AccountView()
 }
