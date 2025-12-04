@@ -8,8 +8,8 @@ struct APIClient {
         return URL(string: "http://127.0.0.1:3658/m1/1133790-1125856-default")!
         #else
         // Mac の LAN IP を使う
-//        return URL(string: "http://192.168.1.69:3658/m1/1133790-1125856-default")!
-        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")! // http://54.95.221.66:8080/api/
+        return URL(string: "http://54.95.221.66:8080/api")!
+//        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")!
         #endif
     }()
     
@@ -42,7 +42,7 @@ struct APIClient {
     
     // デバイストークン登録
     func registerDeviceToken(_ deviceToken: String) async throws {
-        let url = baseURL.appendingPathComponent("/device-token")
+        let url = baseURL.appendingPathComponent("/device_token")
         
         var request = authorizedRequest(url: url, method: "POST")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -185,7 +185,7 @@ struct APIClient {
     
     // 問題集作成
     func createTextbook(name: String, type: String, folderId: String) async throws {
-        let url = baseURL.appendingPathComponent("textbook")
+        let url = baseURL.appendingPathComponent("textbooks")
 
         var request = authorizedRequest(url: url, method: "POST")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -216,7 +216,7 @@ struct APIClient {
     // 問題の追加
     func createQuestion(textId: String, words: [String]) async throws {
         let url = baseURL
-            .appendingPathComponent("create-question")
+            .appendingPathComponent("generate_problem")
             .appendingPathComponent(textId)
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -247,7 +247,7 @@ struct APIClient {
     // 問題文を追加
     func createQuestionStatement(questionId: String) async throws {
         let url = baseURL
-            .appendingPathComponent("create-question-statement")
+            .appendingPathComponent("generate_statement")
             .appendingPathComponent(questionId)
         
         var request = authorizedRequest(url: url, method: "POST")
@@ -262,7 +262,7 @@ struct APIClient {
     // 問題文を削除
     func deleteQuestionStatement(statementId: String) async throws {
         let url = baseURL
-            .appendingPathComponent("question-statement")
+            .appendingPathComponent("questionstatement")
             .appendingPathComponent(statementId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
@@ -274,7 +274,8 @@ struct APIClient {
     
     // 友達の問題集一覧取得
     func fetchFriendsTextbooks() async throws -> [FriendTextbooks] {
-        let url = baseURL.appendingPathComponent("/friend-textbooks")
+        let url = baseURL.appendingPathComponent("friend")
+            .appendingPathComponent("textbooks")
         
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -296,8 +297,8 @@ struct APIClient {
     
     // 友達の問題集情報取得
     func fetchFriendTextbook(textId: String) async throws -> FriendTextbookDetail {
-        let url = baseURL
-            .appendingPathComponent("friend-textbook")
+        let url = baseURL.appendingPathComponent("friend")
+            .appendingPathComponent("textbook")
             .appendingPathComponent(textId)
 
         let request = authorizedRequest(url: url, method: "GET")
@@ -320,7 +321,8 @@ struct APIClient {
     
     // 友達の問題集を自分の問題集に追加
     func addFriendTextbookToMyTextbooks(folderId: String, friendTextbookId: String) async throws {
-        let url = baseURL.appendingPathComponent("/add-friend-textbook")
+        let url = baseURL.appendingPathComponent("friend")
+            .appendingPathComponent("textbooks")
 
         var request = authorizedRequest(url: url, method: "POST")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -336,7 +338,8 @@ struct APIClient {
     
     // 友達の学習記録一覧取得
     func fetchFriendsStudyLogs() async throws -> [FriendStudyLog] {
-        let url = baseURL.appendingPathComponent("/friends-study-logs")
+        let url = baseURL.appendingPathComponent("friend")
+            .appendingPathComponent("studylog")
         
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -358,7 +361,8 @@ struct APIClient {
     
     // アカウント情報取得
     func fetchMyAccount() async throws -> MyAccountResponse {
-        let url = baseURL.appendingPathComponent("/userdata")
+        let url = baseURL.appendingPathComponent("user")
+            .appendingPathComponent("status")
         
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -399,8 +403,9 @@ struct APIClient {
     // AIからの単語提案
     func fetchWordSuggestions(textId: String) async throws -> [String] {
         let url = baseURL
-            .appendingPathComponent("wordsugest")
+            .appendingPathComponent("textbook")
             .appendingPathComponent(textId)
+            .appendingPathComponent("word")
         
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -422,8 +427,9 @@ struct APIClient {
     // 自分の学習ログを記録
     func createMyStudyLog(textbookId: String, score: Double) async throws {
         let url = baseURL
-            .appendingPathComponent("my-study-log")
+            .appendingPathComponent("textbook")
             .appendingPathComponent(textbookId)
+            .appendingPathComponent("result")
         
         var request = authorizedRequest(url: url, method: "POST")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -441,6 +447,7 @@ struct APIClient {
     func addFriend(friendId: String) async throws {
         let url = baseURL
             .appendingPathComponent("friend")
+            .appendingPathComponent("change")
             .appendingPathComponent(friendId)
         
         let request = authorizedRequest(url: url, method: "POST")
@@ -454,6 +461,7 @@ struct APIClient {
     func deleteFriend(friendId: String) async throws {
         let url = baseURL
             .appendingPathComponent("friend")
+            .appendingPathComponent("change")
             .appendingPathComponent(friendId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
@@ -465,7 +473,9 @@ struct APIClient {
     
     // フレンド一覧取得
     func fetchFriends() async throws -> [Friend] {
-        let url = baseURL.appendingPathComponent("/friends")
+        let url = baseURL
+            .appendingPathComponent("friend")
+            .appendingPathComponent("change")
         
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -599,7 +609,7 @@ extension APIClient {
         fileURL: URL
     ) async throws -> [String] {
         let url = baseURL
-            .appendingPathComponent("suggest-words-file")
+            .appendingPathComponent("extract_keywords")
             .appendingPathComponent(textbookId)
 
         var request = authorizedRequest(url: url, method: "POST")

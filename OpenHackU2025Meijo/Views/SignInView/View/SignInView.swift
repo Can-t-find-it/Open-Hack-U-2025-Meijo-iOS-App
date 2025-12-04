@@ -4,6 +4,8 @@ import AppColorTheme
 struct SignInView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @State private var viewModel = SignInViewViewModel()
+    
     private var isLoginEnabled: Bool {
         !email.isEmpty && !password.isEmpty
     }
@@ -26,20 +28,23 @@ struct SignInView: View {
 
     // フォーカス状態（メールアドレス用）
     @FocusState private var isEmailFocused: Bool
+    @State private var isShowingKeyboard: Bool = false
 
     var body: some View {
         GeometryReader { _ in
             VStack(spacing: 0) {
                 // 上半分：アイコン
-                VStack {
-                    Spacer()
-                    Image("icon1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 300)
-                    Spacer()
+                if !isShowingKeyboard {
+                    VStack {
+                        Spacer()
+                        Image("icon1")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 300)
+                        Spacer()
+                    }
+                    .frame(maxHeight: .infinity)
                 }
-                .frame(maxHeight: .infinity)
 
                 // 下半分：白いフォーム
                 VStack(spacing: 24) {
@@ -62,12 +67,22 @@ struct SignInView: View {
 
                     // 決定ボタン
                     Button {
-                        if mode == .login {
-                            // ログイン処理
-                        } else {
-                            // 新規登録処理
+                        Task {
+                            let success: Bool
+                            if mode == .login {
+                                success = await viewModel.login(email: email, password: password)
+                            } else {
+                                success = await viewModel.signUp(
+                                    name: userName,
+                                    email: email,
+                                    password: password
+                                )
+                            }
+                            
+                            if success {
+                                dismiss()
+                            }
                         }
-                        dismiss()
                     } label: {
                         Text(mode == .login ? "ログイン" : "登録する")
                             .font(.headline)
@@ -100,6 +115,16 @@ struct SignInView: View {
             // 0.4秒遅延してキーボード表示（メール欄にフォーカス）
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                 isEmailFocused = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isShowingKeyboard = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isShowingKeyboard = false
             }
         }
     }
