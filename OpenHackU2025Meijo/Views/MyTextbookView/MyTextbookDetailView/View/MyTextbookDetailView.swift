@@ -195,6 +195,7 @@ struct MyTextbookDetailView: View {
             ForEach(newWords.indices, id: \.self) { index in
                 HStack {
                     TextField("例：データベース", text: $newWords[index])
+                        .foregroundStyle(.white)
                         .padding(12)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
