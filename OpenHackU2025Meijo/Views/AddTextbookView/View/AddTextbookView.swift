@@ -3,12 +3,17 @@ import AppColorTheme
 import UniformTypeIdentifiers
 
 struct AddTextbookView: View {
+    @Binding var selectedTab: Tab
     @State private var textbookName: String = ""
     @State private var isShowingCreateFolderSheet = false
     @State private var isShowingDocumentPicker = false
     @State private var selectedFileURL: URL?
     
     @State private var viewModel = AddTextbookViewViewModel()
+    
+    @State private var latestGeneratedTextbook: GeneratedTextbook? = nil
+    @State private var didFinishGenerate: Bool = false
+    @State private var isShowingCreatedTextbookView: Bool = false
     
     enum QuestionFormat: String, CaseIterable {
         case oneQA = "一問一答"
@@ -40,8 +45,21 @@ struct AddTextbookView: View {
                 }
                 .padding(.vertical)
                 
-                createButton
+                createOrConfirmButton
                 
+                // 生成中プログレス
+                if viewModel.isGeneratingTextbook {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("問題集を生成中…")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.8))
+                        
+                        ProgressView(value: viewModel.generateProgress)
+                            .progressViewStyle(.linear)
+                    }
+                    .padding(.horizontal, 16)
+                }
+
                 Spacer()
             }
             .padding(.horizontal)
@@ -57,6 +75,17 @@ struct AddTextbookView: View {
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
+            }
+            // 「確認」押下時の遷移
+            .navigationDestination(isPresented: $isShowingCreatedTextbookView) {
+                if let textbook = latestGeneratedTextbook {
+                    CreatedTextbookView(
+                        textbook: textbook,
+                        selectedTab: $selectedTab
+                    )
+                } else {
+                    EmptyView()
+                }
             }
             .task {
                 await viewModel.load()
@@ -212,8 +241,20 @@ private extension AddTextbookView {
         }
     }
     
-    var createButton: some View {
+    /// 1つのボタンが「生成」→「生成中…」→「確認」と役割を変える
+    var createOrConfirmButton: some View {
         Button {
+            // 生成中は何もしない
+            guard !viewModel.isGeneratingTextbook else { return }
+            
+            // すでに生成済み & データあり → 確認画面へ遷移
+            if didFinishGenerate,
+               let _ = latestGeneratedTextbook {
+                isShowingCreatedTextbookView = true
+                return
+            }
+            
+            // ここから「新規生成」の処理
             guard
                 let folderID = selectedFolderID,
                 let fileURL = selectedFileURL
@@ -221,16 +262,27 @@ private extension AddTextbookView {
 
             let folderIdString = String(describing: folderID)
 
-            Task {
+            Task { @MainActor in
+                // 新しく生成するときは前の結果をリセット
+                didFinishGenerate = false
+                latestGeneratedTextbook = nil
+                
+                // 問題集生成（完了後、viewModel.generatedTextbook に入る）
                 await viewModel.createTextbook(
                     name: textbookName,
                     type: selectedType,
                     folderId: folderIdString,
                     fileURL: fileURL
                 )
+                
+                // 成功していればローカル状態にコピーして「確認」モードへ
+                if let textbook = viewModel.generatedTextbook {
+                    latestGeneratedTextbook = textbook
+                    didFinishGenerate = true
+                }
             }
         } label: {
-            Text("問題集を生成")
+            Text(buttonTitle)
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(.white)
                 .padding(.vertical, 12)
@@ -238,10 +290,11 @@ private extension AddTextbookView {
                 .cornerRadius(5)
                 .padding()
         }
-        .disabled(!canCreateTextbook)
+        .disabled(disableButton)
     }
 }
 
+// MARK: - Logic helpers
 private extension AddTextbookView {
     var isTextbookNameValid: Bool {
         !textbookName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -272,11 +325,43 @@ private extension AddTextbookView {
         }
     }
     
+    /// ボタンのタイトルを状態に応じて変える
+    var buttonTitle: String {
+        if viewModel.isGeneratingTextbook {
+            return "生成中…"
+        } else if didFinishGenerate && latestGeneratedTextbook != nil {
+            return "作った問題集を確認"
+        } else {
+            return "問題集を生成"
+        }
+    }
+    
+    /// ボタンの背景色
     var createButtonBackgroundColor: Color {
-        let base = canCreateTextbook ? Color.blue : Color.gray
-        return base.opacity(0.8)
+        if viewModel.isGeneratingTextbook {
+            return Color.gray.opacity(0.8)
+        }
+        if didFinishGenerate && latestGeneratedTextbook != nil {
+            return Color.pink.opacity(0.9)
+        }
+        return canCreateTextbook ? Color.blue.opacity(0.8) : Color.gray.opacity(0.8)
+    }
+    
+    /// disable 条件
+    var disableButton: Bool {
+        if viewModel.isGeneratingTextbook {
+            // 生成中は常に押せない
+            return true
+        }
+        if didFinishGenerate && latestGeneratedTextbook != nil {
+            // 生成済み → 確認ボタンとして常に押せる
+            return false
+        }
+        // それ以外（まだ生成していないとき）は入力が揃うまで押せない
+        return !canCreateTextbook
     }
 }
+
 
 
 struct DocumentPicker: UIViewControllerRepresentable {
@@ -317,5 +402,6 @@ struct DocumentPicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    AddTextbookView()
+    AddTextbookView(selectedTab: .constant(.add))
 }
+

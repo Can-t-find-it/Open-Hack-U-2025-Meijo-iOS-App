@@ -283,6 +283,12 @@ struct GeneratedQuestion: Codable, Identifiable {
     let id: String
     let questionStatements: [GeneratedQuestionStatement]
     let answer: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case questionStatements = "questionstatements"  // ← ここで対応付け
+        case answer
+    }
 }
 
 struct GeneratedTextbook: Codable {

@@ -175,7 +175,7 @@ final class MyTextbookDetailViewViewModel {
         let progressTask = Task { [weak self] in
             guard let self else { return }
             while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 80_000_000) // 0.08秒ごと
+                try? await Task.sleep(nanoseconds: 600_000_000)
                 await MainActor.run {
                     if self.generateProgress < 0.9 {
                         self.generateProgress += 0.02
@@ -229,7 +229,7 @@ final class MyTextbookDetailViewViewModel {
         let progressTask = Task { [weak self] in
             guard let self else { return }
             while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 80_000_000) // 0.08 秒間隔
+                try? await Task.sleep(nanoseconds: 150_000_000)
                 await MainActor.run {
                     // 通信が終わるまでは 0.9 までしか行かないようにする
                     if self.aISuggestProgress < 0.9 {

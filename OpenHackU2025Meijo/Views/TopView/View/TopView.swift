@@ -48,7 +48,7 @@ struct TopView: View {
         switch tab {
         case .home:    MyTextbookView()
         case .others:  FriendsLogView()
-        case .add:     AddTextbookView()
+        case .add:     AddTextbookView(selectedTab: $selectedTab) 
         case .search:  SearchTextbookView()
         case .account: AccountView()
         }

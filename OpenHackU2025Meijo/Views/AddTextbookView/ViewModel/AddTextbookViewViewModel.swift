@@ -10,7 +10,11 @@ final class AddTextbookViewViewModel {
     var errorMessage: String? = nil
 
     // 生成結果
-    var generatedTextbook: GeneratedTextbook? = nil   // 👈 追加
+    var generatedTextbook: GeneratedTextbook? = nil
+
+    // 🔵 追加：問題集生成中フラグ & 進捗
+    var isGeneratingTextbook: Bool = false
+    var generateProgress: Double = 0.0
 
     private let apiClient = APIClient()
     
@@ -36,8 +40,23 @@ final class AddTextbookViewViewModel {
         folderId: String,
         fileURL: URL
     ) async {
-        isLoading = true
+        // 🔵 isLoading ではなく isGeneratingTextbook で制御
+        isGeneratingTextbook = true
+        generateProgress = 0.0
         errorMessage = nil
+        
+        // 疑似プログレスタスク（DetailView と同じパターン）
+        let progressTask = Task { [weak self] in
+            guard let self else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 600_000_000)
+                await MainActor.run {
+                    if self.generateProgress < 0.9 {
+                        self.generateProgress += 0.02
+                    }
+                }
+            }
+        }
         
         do {
             let response = try await apiClient.createTextbookFromFile(
@@ -46,17 +65,29 @@ final class AddTextbookViewViewModel {
                 folderId: folderId,
                 fileURL: fileURL
             )
-            // 🔽 ここで丸ごと保持
-            generatedTextbook = response.textbook
-
-            // 必要ならここでログ
+            
+            await MainActor.run {
+                // 丸ごと保持
+                self.generatedTextbook = response.textbook
+                // 成功したら 1.0 まで
+                self.generateProgress = 1.0
+            }
+            
             print("作成されたTextbook ID: \(response.textbook.id)")
             print("問題数: \(response.textbook.questions.count)")
+            
+            // 1.0 を少し見せてから終了
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            
         } catch {
             handleError(error, defaultMessage: "問題集の生成に失敗しました。")
         }
         
-        isLoading = false
+        // 疑似プログレスタスクを停止
+        progressTask.cancel()
+        
+        isGeneratingTextbook = false
+        generateProgress = 0.0
     }
     
     private func handleError(_ error: Error, defaultMessage: String) {
@@ -72,4 +103,3 @@ final class AddTextbookViewViewModel {
         }
     }
 }
-
