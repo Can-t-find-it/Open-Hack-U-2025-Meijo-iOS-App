@@ -296,6 +296,18 @@ struct GeneratedQuestionStatement: Codable, Identifiable {
         case choices
         case explanation = "explain"
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        questionStatement = try container.decode(String.self, forKey: .questionStatement)
+
+        // 👇 null → [] に変換（存在しない場合にも対応）
+        choices = try container.decodeIfPresent([String].self, forKey: .choices) ?? []
+
+        explanation = try container.decode(String.self, forKey: .explanation)
+    }
 }
 
 struct GeneratedQuestion: Codable, Identifiable {

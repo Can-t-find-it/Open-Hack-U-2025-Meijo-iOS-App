@@ -20,7 +20,7 @@ struct TextbookCardView: View {
             ZStack {
                 Capsule()
                     .fill(Color.white)
-                    .frame(width: 90, height: 16)
+                    .frame(width: 110, height: 16)
                 
                 Text(questionType)
                     .foregroundColor(AppColorToken.background.surface)
@@ -78,7 +78,13 @@ struct SkeletonTextbookCardView: View {
 }
 
 #Preview {
-    TextbookCardView(title: "テキスト名", questionType: "問題形式")
+    TextbookCardView(title: "テキスト名", questionType: "穴埋め解答入力形式")
+        .padding()
+        .background(Color.black)
+}
+
+#Preview {
+    TextbookCardView(title: "テキスト名", questionType: "穴埋め解答入力形式")
         .padding()
         .background(Color.black)
 }

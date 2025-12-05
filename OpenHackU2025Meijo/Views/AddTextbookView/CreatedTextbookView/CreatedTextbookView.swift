@@ -159,34 +159,34 @@ private struct GeneratedQuestionCard: View {
     }
 }
 
-
-#Preview {
-    let mockStatement = GeneratedQuestionStatement(
-        id: "s1",
-        questionStatement: "テスト問題です",
-        choices: ["A", "B", "C", "D"],
-        explanation: "これはテスト用の解説です。"
-    )
-    
-    let mockQuestion = GeneratedQuestion(
-        id: "q1",
-        questionStatements: [mockStatement],
-        answer: "A"
-    )
-    
-    let mockTextbook = GeneratedTextbook(
-        id: "t1",
-        name: "サンプル問題集",
-        type: "4択問題形式",
-        questions: [mockQuestion]
-    )
-    
-    // ← return は書かない、最後の行だけ View
-    CreatedTextbookView(
-        textbook: mockTextbook,
-        selectedTab: .constant(.add)
-    )
-}
+//
+//#Preview {
+//    let mockStatement = GeneratedQuestionStatement(
+//        id: "s1",
+//        questionStatement: "テスト問題です",
+//        choices: ["A", "B", "C", "D"],
+//        explanation: "これはテスト用の解説です。"
+//    )
+//    
+//    let mockQuestion = GeneratedQuestion(
+//        id: "q1",
+//        questionStatements: [mockStatement],
+//        answer: "A"
+//    )
+//    
+//    let mockTextbook = GeneratedTextbook(
+//        id: "t1",
+//        name: "サンプル問題集",
+//        type: "4択問題形式",
+//        questions: [mockQuestion]
+//    )
+//    
+//    // ← return は書かない、最後の行だけ View
+//    CreatedTextbookView(
+//        textbook: mockTextbook,
+//        selectedTab: .constant(.add)
+//    )
+//}
 
 extension UIApplication {
     func dismissToRoot() {
