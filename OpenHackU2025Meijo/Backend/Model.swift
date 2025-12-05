@@ -33,6 +33,19 @@ struct Folder: Identifiable, Codable {
     let name: String
     let progress: Int
     let textbooks: [Textbook]
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, progress, textbooks
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        progress = try container.decode(Int.self, forKey: .progress)
+        textbooks = try container.decodeIfPresent([Textbook].self, forKey: .textbooks) ?? []
+    }
 }
 
 struct Textbook: Identifiable, Codable {
@@ -67,12 +80,51 @@ struct TextbookDetail: Identifiable, Codable {
     let questions: [Question]
     let score: [Double]
     let times: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, type, questions, score, times
+    }
+
+    init(
+        id: String,
+        name: String,
+        type: String,
+        questions: [Question],
+        score: [Double],
+        times: Int
+    ) {
+        self.id = id
+        self.name = name
+        self.type = type
+        self.questions = questions
+        self.score = score
+        self.times = times
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        type = try container.decode(String.self, forKey: .type)
+
+        questions = try container.decodeIfPresent([Question].self, forKey: .questions) ?? []
+        score = try container.decodeIfPresent([Double].self, forKey: .score) ?? []
+        times = try container.decodeIfPresent(Int.self, forKey: .times) ?? 0
+    }
 }
+
 
 struct Question: Identifiable, Codable {
     let id: String
     let questionStatements: [QuestionStatement]
     let answer: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case questionStatements = "questionstatements" // ← マッピング必須
+        case answer
+    }
 }
 
 struct QuestionStatement: Identifiable, Codable {
@@ -80,6 +132,13 @@ struct QuestionStatement: Identifiable, Codable {
     let questionStatement: String // 問題文
     let choices: [String]? // 4択問題選択肢(4択問題形式ではない場合null)
     let explain: String // 問題解説
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case questionStatement
+        case choices
+        case explain
+    }
 }
 
 enum QuestionType: String {
@@ -190,7 +249,7 @@ struct StudyLog: Codable, Identifiable {
 }
 
 struct WordSuggestionsResponse: Codable {
-    let words: [String]
+    let suggestWord: [String]
 }
 
 struct CreateMyStudyLogRequest: Codable {

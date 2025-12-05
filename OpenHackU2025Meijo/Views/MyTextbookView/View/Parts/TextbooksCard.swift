@@ -6,6 +6,18 @@ struct TextbooksCardView: View {
     var textbookCount: Int
     var progress: Int
     
+    private var progressRatio: Double {
+        guard textbookCount > 0 else { return 0 }
+        // 0〜textbookCount の範囲にクランプしておくとより安全
+        let clamped = min(max(progress, 0), textbookCount)
+        return Double(clamped) / Double(textbookCount)
+    }
+    
+    private var percentageText: String {
+        let percentage = Int(progressRatio * 100)
+        return "\(percentage)%"
+    }
+    
     var body: some View {
         VStack {
             Image(systemName: "books.vertical")
@@ -28,7 +40,7 @@ struct TextbooksCardView: View {
                     .tint(.pink)
                     .scaleEffect(x: 1, y: 2, anchor: .center)
                 
-                Text("\(Int((Double(progress) / Double(textbookCount)) * 100))%")
+                Text(percentageText)
                     .font(.caption)
                     .foregroundColor(.white.opacity(0.8))
             }

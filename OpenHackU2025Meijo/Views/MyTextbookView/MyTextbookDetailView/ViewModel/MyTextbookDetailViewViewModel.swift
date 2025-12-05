@@ -29,6 +29,9 @@ final class MyTextbookDetailViewViewModel {
     
     var addingStatementQuestionId: String? = nil
     var addStatementProgress: Double = 0.0
+    
+    var isGeneratingAISuggest: Bool = false
+    var aISuggestProgress: Double = 0.0
 
     private let apiClient = APIClient()
     
@@ -55,9 +58,6 @@ final class MyTextbookDetailViewViewModel {
             let result = try await apiClient.fetchTextbook(textId: textId)
             print(textId)
             textbook = result
-            
-            let aiWords = try await apiClient.fetchWordSuggestions(textId: textId)
-            suggestedWords = aiWords
         } catch {
             if let apiError = error as? APIError {
                 switch apiError {
@@ -218,6 +218,60 @@ final class MyTextbookDetailViewViewModel {
         isGeneratingQuestions = false
         generateProgress = 0.0
     }
+    
+    func fetchWordSuggestions() async {
+        errorMessage = nil
+
+        isGeneratingAISuggest = true
+        aISuggestProgress = 0.0
+        
+        // プログレスをじわじわ増やすタスク
+        let progressTask = Task { [weak self] in
+            guard let self else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 80_000_000) // 0.08 秒間隔
+                await MainActor.run {
+                    // 通信が終わるまでは 0.9 までしか行かないようにする
+                    if self.aISuggestProgress < 0.9 {
+                        self.aISuggestProgress += 0.02
+                    }
+                }
+            }
+        }
+
+        do {
+            let suggestWords = try await apiClient.fetchWordSuggestions(textId: textId)
+            
+            await MainActor.run {
+                self.suggestedWords = suggestWords
+                // 通信成功 → 1.0 まで一気に進める
+                self.aISuggestProgress = 1.0
+            }
+            
+            // 1.0 を少しだけ見せてから終了
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .invalidStatusCode:
+                    errorMessage = "PDF から単語抽出に失敗しました。"
+                case .decodeError:
+                    errorMessage = "データの読み取りに失敗しました。"
+                }
+            } else {
+                errorMessage = "通信エラーが発生しました。"
+            }
+        }
+        
+        // プログレスタスクを止める
+        progressTask.cancel()
+        
+        isGeneratingAISuggest = false
+        aISuggestProgress = 0.0
+        isLoading = false
+    }
+    
 
     
     // 特定の問題を削除

@@ -418,7 +418,7 @@ struct APIClient {
         
         do {
             let result = try JSONDecoder().decode(WordSuggestionsResponse.self, from: data)
-            return result.words
+            return result.suggestWord
         } catch {
             throw APIError.decodeError(error)
         }

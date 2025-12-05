@@ -129,9 +129,13 @@ struct MyTextbookView: View {
             await viewModel.start()
         }
         .sheet(isPresented: $isShowingCreateFolderSheet) {
-            CreateFolderView()
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
+            CreateFolderView {
+                Task {
+                    await viewModel.load()
+                }
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
     }
     
@@ -150,13 +154,17 @@ struct MyTextbookView: View {
 
 struct FolderContainView: View {
     @Environment(\.presentationMode) var presentationMode
-    
+
     @State private var isShowingCreateTextbookSheet = false
-    
-    let folder: Folder
+    @State private var viewModel: FolderContainViewViewModel
+
+    init(folder: Folder) {
+        _viewModel = State(initialValue: FolderContainViewViewModel(folder: folder))
+    }
 
     var body: some View {
         VStack {
+            // ヘッダー
             VStack {
                 HStack {
                     Button {
@@ -166,16 +174,16 @@ struct FolderContainView: View {
                             .font(.title2)
                             .foregroundColor(.white)
                     }
-                    
+
                     Spacer()
-                    
-                    Text("\(folder.name)")
+
+                    Text(viewModel.folder.name)
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                    
+
                     Spacer()
-                    
+
                     Button {
                         isShowingCreateTextbookSheet = true
                     } label: {
@@ -185,20 +193,28 @@ struct FolderContainView: View {
                 }
             }
             .padding(.horizontal)
-            
+
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .tint(.white)
+                    }
+
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
                         GridItem(.flexible())
                     ], spacing: 16) {
-                        ForEach(folder.textbooks) { textbook in
+                        ForEach(viewModel.folder.textbooks) { textbook in
                             NavigationLink {
-                                MyTextbookDetailView(textName: textbook.name, textId: textbook.id)
+                                MyTextbookDetailView(
+                                    textName: textbook.name,
+                                    textId: textbook.id
+                                )
                             } label: {
                                 TextbookCardView(
                                     title: textbook.name,
-                                    questionCount: 5,
+                                    questionCount: 5,      // TODO: APIに合わせて
                                     questionType: textbook.type
                                 )
                             }
@@ -207,18 +223,29 @@ struct FolderContainView: View {
                 }
                 .padding()
             }
-            
+
             Spacer()
         }
         .fullBackground()
         .navigationBarHidden(true)
+        .task {
+            // 画面表示時にも最新を取りに行く
+            await viewModel.reloadFolder()
+        }
         .sheet(isPresented: $isShowingCreateTextbookSheet) {
-            CreateTextbookView(folderId: String(describing: folder.id))
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
+            CreateTextbookView(
+                onTextbookCreated: {
+                    Task {
+                        await viewModel.reloadFolder()
+                    }
+                }, folderId: String(describing: viewModel.folder.id)
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
     }
 }
+
 
 #Preview {
     MyTextbookView()

@@ -50,9 +50,13 @@ struct AddTextbookView: View {
                 DocumentPicker(selectedFileURL: $selectedFileURL)
             }
             .sheet(isPresented: $isShowingCreateFolderSheet) {
-                CreateFolderView()
-                    .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
+                CreateFolderView {
+                    Task {
+                        await viewModel.load()
+                    }
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
             }
             .task {
                 await viewModel.load()

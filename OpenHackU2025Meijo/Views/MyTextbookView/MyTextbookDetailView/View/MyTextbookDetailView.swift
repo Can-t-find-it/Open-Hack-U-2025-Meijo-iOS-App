@@ -11,6 +11,7 @@ struct MyTextbookDetailView: View {
     @State private var selectedFileURL: URL?
     @State private var isShowingDocumentPicker = false
     @State private var isPdfExtractSended = false
+    @State private var isAiSuggestSended = false
     
     let textName: String
     let textId: String
@@ -106,16 +107,28 @@ struct MyTextbookDetailView: View {
                             withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
                                 isAddingQuestions.toggle()
                             }
+
                             if isAddingQuestions {
+                                // 🔵 開いたとき：入力系を初期化
                                 isPdfExtractSended = false
+                                isAiSuggestSended = false
                                 selectedFileURL = nil
+                                newWords = [""]
                                 viewModel.pdfWords = []
+                                viewModel.suggestedWords = []
+                            } else {
+                                // 🔴 閉じたとき：AI提案・抽出結果も含めて全部リセット
+                                isPdfExtractSended = false
+                                isAiSuggestSended = false
+                                selectedFileURL = nil
+                                newWords = [""]
+                                viewModel.pdfWords = []
+                                viewModel.suggestedWords = []
                             }
                         } label: {
                             ZStack {
                                 Text(isAddingQuestions ? "閉じる" : "問題を追加")
                                     .foregroundStyle(.white)
-
                                 HStack {
                                     Spacer()
                                     Image(systemName: isAddingQuestions ? "chevron.up" : "chevron.down")
@@ -127,6 +140,7 @@ struct MyTextbookDetailView: View {
                             .background(Color.blue.opacity(0.8))
                             .cornerRadius(5)
                         }
+
                         
                         if isAddingQuestions {
                             addWordsInlineSection
@@ -287,26 +301,45 @@ struct MyTextbookDetailView: View {
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
+                    HStack(spacing: 8) {
                         ForEach(viewModel.pdfWords, id: \.self) { word in
+                            // すでに newWords に入っているかどうか
+                            let isSelected = newWords.contains { $0 == word }
+                            
                             Button {
+                                // 重複は追加しない
+                                guard !isSelected else { return }
                                 
+                                // 空欄の TextField があればそこに入れる
+                                if let emptyIndex = newWords.firstIndex(where: {
+                                    $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                }) {
+                                    newWords[emptyIndex] = word
+                                } else {
+                                    // なければ行を追加
+                                    newWords.append(word)
+                                }
                             } label: {
                                 Text(word)
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(isSelected ? .white : .blue)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
                                     .background(
                                         Group {
-                                            Capsule()
-                                                .stroke(Color.blue.opacity(0.8), lineWidth: 1)
+                                            if isSelected {
+                                                Capsule()
+                                                    .fill(Color.blue.opacity(0.8))
+                                            } else {
+                                                Capsule()
+                                                    .stroke(Color.blue.opacity(0.8), lineWidth: 1)
+                                            }
                                         }
                                     )
                             }
                         }
                     }
                 }
-                
+
             }
             .padding(.top, 16)
             
@@ -315,45 +348,89 @@ struct MyTextbookDetailView: View {
                     .foregroundStyle(.pink)
                     .font(.headline)
                 
-                if viewModel.suggestedWords.isEmpty {
-                    Text("提案はまだありません")
+                // このボタンを押せるかどうか
+                let canSendAISuggest = !viewModel.isGeneratingAISuggest && !isAiSuggestSended
+                
+                Button {
+                    Task {
+                        guard canSendAISuggest else { return }
+                        await viewModel.fetchWordSuggestions()
+                        await MainActor.run {
+                            isAiSuggestSended = true   // 🔹 1回送信したらロック
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .font(.title3)
+                        Text(
+                            viewModel.isGeneratingAISuggest
+                            ? "思考中…"
+                            : (isAiSuggestSended ? "生成済み" : "生成")
+                        )
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.6))
-                } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(viewModel.suggestedWords, id: \.self) { word in
-                                Button {
-                                    guard !newWords.contains(word) else { return }
-                                    
-                                    if let emptyIndex = newWords.firstIndex(where: { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) {
-                                        newWords[emptyIndex] = word
-                                    } else {
-                                        newWords.append(word)
-                                    }
-                                } label: {
-                                    Text(word)
-                                        .foregroundStyle(newWords.contains(word) ? .white : .pink)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(
-                                            Group {
-                                                if newWords.contains(word) {
-                                                    Capsule()
-                                                        .fill(Color.pink.opacity(0.8))
-                                                } else {
-                                                    Capsule()
-                                                        .stroke(Color.pink.opacity(0.8), lineWidth: 1)
-                                                }
-                                            }
-                                        )
+                        .bold()
+                    }
+                    .foregroundStyle(canSendAISuggest ? .white : .gray)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        canSendAISuggest
+                        ? Color.pink
+                        : Color.gray.opacity(0.3)   // 🔹 生成後はグレー
+                    )
+                    .cornerRadius(8)
+                    .shadow(radius: canSendAISuggest ? 1 : 0)
+                }
+                .disabled(!canSendAISuggest)
+                
+                if viewModel.isGeneratingAISuggest {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("AI が単語を検討中…")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.8))
+                        ProgressView(value: viewModel.aISuggestProgress)
+                            .progressViewStyle(.linear)
+                    }
+                    .padding(.top, 4)
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(viewModel.suggestedWords, id: \.self) { word in
+                            Button {
+                                guard !newWords.contains(word) else { return }
+                                
+                                if let emptyIndex = newWords.firstIndex(where: {
+                                    $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                }) {
+                                    newWords[emptyIndex] = word
+                                } else {
+                                    newWords.append(word)
                                 }
+                            } label: {
+                                Text(word)
+                                    .foregroundStyle(newWords.contains(word) ? .white : .pink)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Group {
+                                            if newWords.contains(word) {
+                                                Capsule()
+                                                    .fill(Color.pink.opacity(0.8))
+                                            } else {
+                                                Capsule()
+                                                    .stroke(Color.pink.opacity(0.8), lineWidth: 1)
+                                            }
+                                        }
+                                    )
                             }
                         }
                     }
                 }
             }
             .padding(.vertical)
+
 
             HStack {
                 Spacer()
@@ -362,8 +439,10 @@ struct MyTextbookDetailView: View {
                         isAddingQuestions = false
                         newWords = [""]
                         isPdfExtractSended = false
+                        isAiSuggestSended = false            // 🔹 ロック解除
                         selectedFileURL = nil
                         viewModel.pdfWords = []
+                        viewModel.suggestedWords = []        // 🔹 提案単語をクリア
                     }
                 }
                 .padding(.horizontal)
@@ -387,8 +466,10 @@ struct MyTextbookDetailView: View {
                                 isAddingQuestions = false
                                 newWords = [""]
                                 isPdfExtractSended = false
+                                isAiSuggestSended = false          // 🔹 ロック解除
                                 selectedFileURL = nil
                                 viewModel.pdfWords = []
+                                viewModel.suggestedWords = []      // 🔹 提案単語クリア
                             }
                         }
                     }

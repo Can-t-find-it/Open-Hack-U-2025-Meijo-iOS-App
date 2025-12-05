@@ -11,6 +11,8 @@ struct CreateTextbookView: View {
     @State private var isShowingDocumentPicker = false
     @State private var selectedFileURL: URL?
     
+    let onTextbookCreated: (() -> Void)? 
+    
     @State private var viewModel = CreateTextbookViewViewModel()
     
     let folderId: String
@@ -43,13 +45,18 @@ struct CreateTextbookView: View {
                     Spacer()
 
                     Button {
+                        
                         Task {
                             await viewModel.createTextbook(
                                 name: textbookName,
                                 type: selectedType,
                                 folderId: folderId
                             )
-                            dismiss()
+
+                            await MainActor.run {
+                                onTextbookCreated?()   // 👈 親に通知
+                                dismiss()
+                            }
                         }
                     } label: {
                         Text("完了")
@@ -179,8 +186,4 @@ struct CreateTextbookView: View {
             return "穴埋め入力"
         }
     }
-}
-
-#Preview {
-    CreateTextbookView(folderId: "105")
 }

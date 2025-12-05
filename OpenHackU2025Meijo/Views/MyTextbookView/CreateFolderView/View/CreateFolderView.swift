@@ -8,6 +8,8 @@ struct CreateFolderView: View {
     @FocusState private var isTextFieldFocused: Bool
 
     @Environment(\.dismiss) private var dismiss
+    
+    let onFolderCreated: (() -> Void)?
 
     var body: some View {
         VStack {
@@ -25,7 +27,11 @@ struct CreateFolderView: View {
                     Button {
                         Task {
                             await viewModel.createFolder(name: folderName)
-                            dismiss()
+                            
+                            await MainActor.run {
+                                onFolderCreated?()
+                                dismiss()
+                            }
                         }
                     } label: {
                         Text("完了")
@@ -90,5 +96,5 @@ struct CreateFolderView: View {
 }
 
 #Preview {
-    CreateFolderView()
+    MyTextbookView()
 }
