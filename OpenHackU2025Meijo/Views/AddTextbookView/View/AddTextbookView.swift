@@ -317,11 +317,11 @@ private extension AddTextbookView {
         case (.oneQA, .fourChoices):
             return "4択問題形式"
         case (.oneQA, .input):
-            return "入力形式"
+            return "解答入力形式"
         case (.fillBlank, .fourChoices):
-            return "穴埋めの4択"
+            return "穴埋め4択問題形式"
         case (.fillBlank, .input):
-            return "穴埋め入力"
+            return "穴埋め解答入力形式"
         }
     }
     

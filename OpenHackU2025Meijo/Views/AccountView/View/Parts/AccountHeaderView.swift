@@ -37,11 +37,15 @@ struct AccountHeaderView: View {
                                 .foregroundStyle(.white)
                         }
                         
-                        VStack {
-                            Text("\(friendCount)")
-                                .foregroundStyle(.white)
-                            Text("友達")
-                                .foregroundStyle(.white)
+                        NavigationLink {
+                            FriendListView()
+                        } label: {
+                            VStack {
+                                Text("\(friendCount)")
+                                    .foregroundStyle(.white)
+                                Text("友達")
+                                    .foregroundStyle(.white)
+                            }
                         }
                     }
                 }

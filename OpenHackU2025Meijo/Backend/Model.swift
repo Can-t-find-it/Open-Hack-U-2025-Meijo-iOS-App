@@ -274,8 +274,14 @@ struct FriendsListResponse: Codable {
 }
 
 struct Friend: Codable, Identifiable {
-    let id: Int
+    let id: String
     let name: String
+}
+
+struct FriendSearchResult: Identifiable, Codable, Equatable {
+    let id: String
+    let userName: String
+    let isFriend: Bool
 }
 
 struct GeneratedQuestionStatement: Codable, Identifiable {

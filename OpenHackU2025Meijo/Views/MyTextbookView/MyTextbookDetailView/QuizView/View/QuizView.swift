@@ -15,6 +15,9 @@ struct QuizView: View {
     
     @State private var viewModel = QuizViewViewModel()
     
+    // 🔽 追加：解答入力形式用
+    @State private var inputAnswer: String = ""
+    
     // 🔽 追加：結果用
     @State private var correctCount: Int = 0
     @State private var isFinished: Bool = false
@@ -27,6 +30,14 @@ struct QuizView: View {
         let statements = currentQuestion.questionStatements
         guard statements.indices.contains(currentStatementIndex) else { return nil }
         return statements[currentStatementIndex]
+    }
+    
+    // 🔽 現在の問題が 4択かどうか
+    private var isMultipleChoice: Bool {
+        if let choices = currentStatement?.choices, !choices.isEmpty {
+            return true
+        }
+        return false
     }
     
     var body: some View {
@@ -46,6 +57,7 @@ struct QuizView: View {
                     in: 0..<questions[0].questionStatements.count
                 )
             }
+            inputAnswer = ""
         }
     }
     
@@ -92,7 +104,7 @@ struct QuizView: View {
                 )
             )
             
-            // MARK: - 問題 & 選択肢エリア
+            // MARK: - 問題 & 選択肢 / 入力エリア
             VStack(spacing: 24) {
                 
                 // 問題カード
@@ -111,21 +123,34 @@ struct QuizView: View {
                 .padding(.vertical, 30)
                 .cardBackground()
                 
-                // 選択肢カード
+                // 選択肢 or 入力カード
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("選択肢から答えを選んでください")
-                        .foregroundStyle(.white)
-                        .font(.subheadline)
-                    
-                    if let choices = currentStatement?.choices, !choices.isEmpty {
-                        VStack(spacing: 12) {
-                            ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
-                                choiceRow(index: index, text: choice)
+                    if isMultipleChoice {
+                        Text("選択肢から答えを選んでください")
+                            .foregroundStyle(.white)
+                            .font(.subheadline)
+                        
+                        if let choices = currentStatement?.choices {
+                            VStack(spacing: 12) {
+                                ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
+                                    choiceRow(index: index, text: choice)
+                                }
                             }
                         }
                     } else {
-                        Text("この問題には選択肢が設定されていません")
-                            .foregroundStyle(.white.opacity(0.7))
+                        Text("解答を入力してください")
+                            .foregroundStyle(.white)
+                            .font(.subheadline)
+                        
+                        TextField("ここに解答を入力", text: $inputAnswer)
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                            .foregroundStyle(.white)
+                            .padding(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white.opacity(0.08))
+                            )
                     }
                     
                     // 正解 / 不正解 表示
@@ -134,6 +159,21 @@ struct QuizView: View {
                             Text(isCorrect ? "正解！ 🎉" : "不正解…")
                                 .font(.headline)
                                 .foregroundStyle(isCorrect ? Color.green : Color.red)
+                            
+                            // 🔹 正解を表示（4択でも入力形式でも共通）
+                            Text("正解：\(currentQuestion.answer)")
+                                .font(.subheadline)
+                                .foregroundStyle(.white)
+                            
+                            // 🔹 入力形式のときは「あなたの解答」も表示
+                            if !isMultipleChoice {
+                                let trimmedInput = inputAnswer.trimmingCharacters(in: .whitespacesAndNewlines)
+                                if !trimmedInput.isEmpty {
+                                    Text("あなたの解答：\(trimmedInput)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.white.opacity(0.8))
+                                }
+                            }
                             
                             // 解説
                             if let explain = currentStatement?.explain, !explain.isEmpty {
@@ -150,6 +190,7 @@ struct QuizView: View {
                         }
                         .padding(.top, 8)
                     }
+
                 }
             }
             .padding()
@@ -160,6 +201,16 @@ struct QuizView: View {
             VStack(spacing: 12) {
                 // 回答するボタン
                 if !isAnswered {
+                    let canAnswer: Bool = {
+                        if isMultipleChoice {
+                            return selectedChoiceIndex != nil
+                        } else {
+                            return !inputAnswer
+                                .trimmingCharacters(in: .whitespacesAndNewlines)
+                                .isEmpty
+                        }
+                    }()
+                    
                     Button {
                         checkAnswer()
                     } label: {
@@ -167,13 +218,15 @@ struct QuizView: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(selectedChoiceIndex == nil
-                                        ? Color.white.opacity(0.2)
-                                        : Color.pink)
+                            .background(
+                                canAnswer
+                                ? Color.pink
+                                : Color.white.opacity(0.2)
+                            )
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(selectedChoiceIndex == nil)
+                    .disabled(!canAnswer)
                 }
                 
                 // 次の問題ボタン
@@ -284,7 +337,7 @@ struct QuizView: View {
         }
     }
     
-    // MARK: - 選択肢1行のView
+    // MARK: - 選択肢1行のView（4択用）
     @ViewBuilder
     private func choiceRow(index: Int, text: String) -> some View {
         let label = ["A", "B", "C", "D"]
@@ -347,21 +400,35 @@ struct QuizView: View {
     
     // MARK: - 回答チェック
     private func checkAnswer() {
-        guard
-            let statement = currentStatement,
-            let choices = statement.choices,
-            let selectedIndex = selectedChoiceIndex
-        else { return }
+        guard let statement = currentStatement else { return }
         
-        let selectedChoice = choices[selectedIndex]
-        let result = (selectedChoice == currentQuestion.answer)
-        
-        if result {
-            correctCount += 1
+        if let choices = statement.choices, !choices.isEmpty {
+            // 🔹 4択問題
+            guard let selectedIndex = selectedChoiceIndex else { return }
+            let selectedChoice = choices[selectedIndex]
+            let result = (selectedChoice == currentQuestion.answer)
+            
+            if result {
+                correctCount += 1
+            }
+            
+            isCorrect = result
+            isAnswered = true
+        } else {
+            // 🔹 解答入力形式
+            let trimmedInput = inputAnswer
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedInput.isEmpty else { return }
+            
+            let result = (trimmedInput == currentQuestion.answer)
+            
+            if result {
+                correctCount += 1
+            }
+            
+            isCorrect = result
+            isAnswered = true
         }
-        
-        isCorrect = result
-        isAnswered = true
     }
     
     // MARK: - 次の問題へ
@@ -373,6 +440,7 @@ struct QuizView: View {
             selectedChoiceIndex = nil
             isAnswered = false
             isCorrect = nil
+            inputAnswer = ""          // 🔹 入力もリセット
             
             // ランダムな statement を選ぶ
             if !questions[currentIndex].questionStatements.isEmpty {
@@ -386,6 +454,7 @@ struct QuizView: View {
         }
     }
 }
+
 
 // MARK: - 円形プログレスビュー
 struct CircularProgressView: View {

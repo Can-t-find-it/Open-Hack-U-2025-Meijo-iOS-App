@@ -382,7 +382,7 @@ struct APIClient {
     
     // 自分の学習ログ取得
     func fetchMyStudyLogs() async throws -> [StudyLog] {
-        let url = baseURL.appendingPathComponent("friend")
+        let url = baseURL.appendingPathComponent("user")
             .appendingPathComponent("studylog")
 
         let request = authorizedRequest(url: url, method: "GET")
@@ -507,6 +507,40 @@ struct APIClient {
         
         do {
             return try JSONDecoder().decode(FriendsListResponse.self, from: data).friends
+        } catch {
+            throw APIError.decodeError(error)
+        }
+    }
+    
+    // ユーザ検索
+    func searchUsers(keyword: String) async throws -> [FriendSearchResult] {
+        var components = URLComponents(
+            url: baseURL
+                .appendingPathComponent("friend")
+                .appendingPathComponent("search"),
+            resolvingAgainstBaseURL: false
+        )!
+        
+        components.queryItems = [
+            URLQueryItem(name: "keyword", value: keyword)
+        ]
+        
+        guard let url = components.url else {
+            throw APIError.invalidStatusCode   // URL生成失敗時の簡易エラー
+        }
+        
+        let request = authorizedRequest(url: url, method: "GET")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw APIError.invalidStatusCode
+        }
+        
+        do {
+            // レスポンスが [ { id, name, is_friend }, ... ] 形式想定
+            return try JSONDecoder().decode([FriendSearchResult].self, from: data)
         } catch {
             throw APIError.decodeError(error)
         }

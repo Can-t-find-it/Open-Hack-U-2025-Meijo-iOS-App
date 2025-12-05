@@ -4,6 +4,8 @@ import AppColorTheme
 // MARK: - メイン View
 
 struct FriendListView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     enum Mode {
         case friends     // 友達一覧
         case search      // ユーザー検索
@@ -15,7 +17,19 @@ struct FriendListView: View {
     var body: some View {
         VStack {
             // タイトル
-            SectionHeaderView(title: "フレンド")
+            ZStack {
+                SectionHeaderView(title: "フレンド")
+                
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("閉じる")
+                            .foregroundStyle(.blue)
+                    }
+                    Spacer()
+                }
+            }
             
             // MARK: - モード切り替え（SignInView と同じスタイル）
             HStack {
@@ -39,6 +53,7 @@ struct FriendListView: View {
         }
         .padding()
         .fullBackground()
+        .navigationBarBackButtonHidden(true)
         .task {
             await viewModel.loadFriends()
         }
@@ -98,7 +113,7 @@ struct FriendListView: View {
                 .foregroundStyle(.white)
             
             HStack {
-                TextField("ユーザー名やIDで検索", text: $viewModel.query)
+                TextField("ユーザー名で検索", text: $viewModel.query)
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
                     .padding(10)
@@ -195,11 +210,11 @@ struct FriendListView: View {
 // MARK: - Row Views
 
 struct FriendRowView: View {
-    let friend: FriendData
+    let friend: Friend
     
     var body: some View {
         HStack {
-            Text(friend.userName)
+            Text(friend.name)
                 .foregroundStyle(.white)
                 .font(.headline)
             

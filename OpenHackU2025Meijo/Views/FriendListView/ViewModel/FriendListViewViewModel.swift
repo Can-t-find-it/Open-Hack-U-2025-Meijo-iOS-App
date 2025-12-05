@@ -1,19 +1,6 @@
 import SwiftUI
 import Observation
 
-// MARK: - モデル
-
-struct FriendData: Identifiable, Codable, Equatable {
-    let id: String
-    let userName: String
-}
-
-struct FriendSearchResult: Identifiable, Codable, Equatable {
-    let id: String
-    let userName: String
-    let isFriend: Bool
-}
-
 // MARK: - ViewModel
 
 @MainActor
@@ -23,7 +10,7 @@ final class FriendListViewViewModel {
     private let apiClient = APIClient()
     
     // 友達一覧
-    var friends: [FriendData] = []
+    var friends: [Friend] = []
     var isLoadingFriends: Bool = false
     var friendsErrorMessage: String? = nil
     
@@ -38,15 +25,8 @@ final class FriendListViewViewModel {
         friendsErrorMessage = nil
         
         do {
-            // TODO: API に合わせて実装してください
-            // 例: let response = try await apiClient.fetchFriends()
-            // self.friends = response
-            
-            try await Task.sleep(nanoseconds: 400_000_000)
-            self.friends = [
-                FriendData(id: "user-001", userName: "りょうが"),
-                FriendData(id: "user-002", userName: "そうしろう")
-            ]
+            let response = try await apiClient.fetchFriends()
+             self.friends = response
         } catch {
             friendsErrorMessage = "フレンド一覧の取得に失敗しました。"
         }
@@ -66,37 +46,35 @@ final class FriendListViewViewModel {
         searchErrorMessage = nil
         
         do {
-            // TODO: API に合わせて実装してください
-            // 例: let response = try await apiClient.searchUsers(keyword: trimmed)
-            // self.searchResults = response
-            
-            try await Task.sleep(nanoseconds: 400_000_000)
-            self.searchResults = [
-                FriendSearchResult(id: "user-001", userName: "りょうが", isFriend: true),
-                FriendSearchResult(id: "user-003", userName: "たくみ", isFriend: false)
-            ]
+            // 🔹 実際の API を叩く
+            let results = try await apiClient.searchUsers(keyword: trimmed)
+            self.searchResults = results
         } catch {
-            searchErrorMessage = "ユーザー検索に失敗しました。"
+            print("ユーザー検索失敗: \(error)")
+            self.searchErrorMessage = "ユーザー検索に失敗しました。"
+            self.searchResults = []
         }
         
         isSearching = false
     }
     
     func sendFriendRequest(to user: FriendSearchResult) async {
-        // TODO: フレンド申請 API を呼ぶ
-        // try await apiClient.sendFriendRequest(userId: user.id)
-        
-        if let index = searchResults.firstIndex(of: user) {
-            searchResults[index] = FriendSearchResult(
-                id: user.id,
-                userName: user.userName,
-                isFriend: true
-            )
-        }
-        
-        // すでに friends にいないなら追加してもOK
-        if !friends.contains(where: { $0.id == user.id }) {
-            friends.append(FriendData(id: user.id, userName: user.userName))
+        do {
+            try await apiClient.addFriend(friendId: user.id)
+            
+            if let index = searchResults.firstIndex(of: user) {
+                searchResults[index] = FriendSearchResult(
+                    id: user.id,
+                    userName: user.userName,
+                    isFriend: true
+                )
+            }
+            
+            if !friends.contains(where: { $0.id == user.id }) {
+                friends.append(Friend(id: user.id, name: user.userName))
+            }
+        } catch {
+            print("フレンド追加に失敗: \(error)")
         }
     }
 }
