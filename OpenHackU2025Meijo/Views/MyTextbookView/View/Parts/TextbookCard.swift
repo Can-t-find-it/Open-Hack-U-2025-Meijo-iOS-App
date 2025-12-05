@@ -3,7 +3,6 @@ import AppColorTheme
 
 struct TextbookCardView: View {
     var title: String
-    var questionCount: Int
     var questionType: String
 
     var body: some View {
@@ -18,21 +17,15 @@ struct TextbookCardView: View {
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            HStack {
-                Text("\(questionCount)問")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.8))
+            ZStack {
+                Capsule()
+                    .fill(Color.white)
+                    .frame(width: 90, height: 16)
                 
-                ZStack {
-                    Capsule()
-                        .fill(Color.white)
-                        .frame(width: 90, height: 16)
-                    
-                    Text(questionType)
-                        .foregroundColor(AppColorToken.background.surface)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                }
+                Text(questionType)
+                    .foregroundColor(AppColorToken.background.surface)
+                    .font(.caption)
+                    .fontWeight(.semibold)
             }
         }
         .frame(height: 120)
@@ -85,7 +78,7 @@ struct SkeletonTextbookCardView: View {
 }
 
 #Preview {
-    TextbookCardView(title: "テキスト名", questionCount: 10, questionType: "問題形式")
+    TextbookCardView(title: "テキスト名", questionType: "問題形式")
         .padding()
         .background(Color.black)
 }

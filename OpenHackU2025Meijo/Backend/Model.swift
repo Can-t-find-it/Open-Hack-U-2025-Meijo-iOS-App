@@ -60,7 +60,6 @@ struct CreateTextbookRequest: Codable {
     let folderId: String
 }
 
-
 struct CreateFolderRequest: Codable {
     let folderName: String
 }
@@ -171,6 +170,20 @@ struct FriendTextbooks: Codable, Identifiable {
     let textbooks: [FriendTextbook]
     
     var id: String { friendId }
+    
+    enum CodingKeys: String, CodingKey {
+        case friendId
+        case userName
+        case textbooks
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        friendId = try container.decode(String.self, forKey: .friendId)
+        userName = try container.decode(String.self, forKey: .userName)
+        textbooks = try container.decodeIfPresent([FriendTextbook].self, forKey: .textbooks) ?? []
+    }
 }
 
 struct FriendTextbook: Codable, Identifiable {

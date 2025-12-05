@@ -214,7 +214,6 @@ struct FolderContainView: View {
                             } label: {
                                 TextbookCardView(
                                     title: textbook.name,
-                                    questionCount: 5,      // TODO: APIに合わせて
                                     questionType: textbook.type
                                 )
                             }

@@ -382,7 +382,8 @@ struct APIClient {
     
     // 自分の学習ログ取得
     func fetchMyStudyLogs() async throws -> [StudyLog] {
-        let url = baseURL.appendingPathComponent("/my-study-logs")
+        let url = baseURL.appendingPathComponent("friend")
+            .appendingPathComponent("studylog")
 
         let request = authorizedRequest(url: url, method: "GET")
         let (data, response) = try await URLSession.shared.data(for: request)
