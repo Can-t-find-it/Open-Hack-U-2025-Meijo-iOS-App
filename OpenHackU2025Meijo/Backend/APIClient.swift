@@ -443,6 +443,24 @@ struct APIClient {
         try validate204(response)
     }
     
+    func addMyStudyLog(textbookId: String, score: Double) async throws {
+        let url = baseURL
+            .appendingPathComponent("textbook")
+            .appendingPathComponent(textbookId)
+            .appendingPathComponent("studylog")
+        
+        var request = authorizedRequest(url: url, method: "POST")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = CreateMyStudyLogRequest(score: score)
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        debugLog(request: request, data: data, response: response)
+        
+        try validate204(response)
+    }
+    
     // フレンド追加
     func addFriend(friendId: String) async throws {
         let url = baseURL

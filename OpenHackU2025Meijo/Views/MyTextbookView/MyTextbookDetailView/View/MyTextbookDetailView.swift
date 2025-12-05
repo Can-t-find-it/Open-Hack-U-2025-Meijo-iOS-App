@@ -57,7 +57,7 @@ struct MyTextbookDetailView: View {
                         TextbookScoreChart(data: viewModel.textbook.score)
                         
                         NavigationLink {
-                            QuizView(title: textName, questions: viewModel.textbook.questions)
+                            QuizView(title: textName, questions: viewModel.textbook.questions, textbookId: textId)
                         } label: {
                             Text("学習開始")
                                 .frame(maxWidth: .infinity)

@@ -5,12 +5,15 @@ struct QuizView: View {
     
     let title: String
     let questions: [Question]
+    let textbookId: String
     
     @State private var currentIndex: Int = 0
     @State private var selectedChoiceIndex: Int? = nil
     @State private var currentStatementIndex: Int = 0
     @State private var isAnswered: Bool = false
     @State private var isCorrect: Bool? = nil
+    
+    @State private var viewModel = QuizViewViewModel()
     
     // 🔽 追加：結果用
     @State private var correctCount: Int = 0
@@ -248,7 +251,25 @@ struct QuizView: View {
             Spacer()
             
             Button {
-                presentationMode.wrappedValue.dismiss()
+                Task {
+                    let score = questions.isEmpty
+                        ? 0.0
+                        : (Double(correctCount) / Double(questions.count)) * 100.0
+                    
+                    await viewModel.createMyStudyLog(
+                        textbookId: textbookId,
+                        score: score
+                    )
+                    
+                    await viewModel.addMyStudyLog(
+                        textbookId: textbookId,
+                        score: score
+                    )
+                    
+                    await MainActor.run {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
             } label: {
                 Text("閉じる")
                     .font(.headline)
@@ -431,5 +452,9 @@ struct CircularProgressView: View {
         )
     ]
     
-    QuizView(title: "SwiftUI クイズ", questions: mockQuestions)
+    QuizView(
+        title: "SwiftUI クイズ",
+        questions: mockQuestions,
+        textbookId: "dummy-textbook-id"
+    )
 }
