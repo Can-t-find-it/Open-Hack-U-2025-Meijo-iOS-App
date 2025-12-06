@@ -2,14 +2,22 @@ import Foundation
 
 struct APIClient {
     
+    // ★ タイムアウトを伸ばした専用 URLSession
+    private let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 120    // リクエスト単位のタイムアウト（秒）
+        config.timeoutIntervalForResource = 600   // 全体（アップロード＋ダウンロード）のタイムアウト（秒）
+        return URLSession(configuration: config)
+    }()
+    
     private let baseURL: URL = {
         #if targetEnvironment(simulator)
         // Mac の iOS シミュレータからは 127.0.0.1 で Mac ローカルに届く
         return URL(string: "http://127.0.0.1:3658/m1/1133790-1125856-default")!
         #else
-        // Mac の LAN IP を使う
+        // EC2 の API
         return URL(string: "http://54.95.221.66:8080/api")!
-//        return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")!
+        // return URL(string: "http://s0sh1r0-dev.local:3658/m1/1133790-1125856-default")!
         #endif
     }()
     
@@ -50,12 +58,11 @@ struct APIClient {
         let body = DeviceTokenRequest(deviceToken: deviceToken)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
     }
-
 
     // サインアップ
     func signUp(name: String, email: String, password: String) async throws -> CertificationResponse {
@@ -67,7 +74,7 @@ struct APIClient {
         let body = SignUpRequest(name: name, email: email, password: password)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         guard let httpResponse = response as? HTTPURLResponse,
@@ -94,7 +101,7 @@ struct APIClient {
         let body = LoginRequest(email: email, password: password)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         guard let httpResponse = response as? HTTPURLResponse,
@@ -116,7 +123,7 @@ struct APIClient {
         let url = baseURL.appendingPathComponent("/textbooks")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -137,7 +144,7 @@ struct APIClient {
         let body = CreateFolderRequest(folderName: name)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -153,13 +160,12 @@ struct APIClient {
         let body = DeleteFoldersRequest(folderIds: folderIds)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
     }
 
-    
     // 問題集情報取得
     func fetchTextbook(textId: String) async throws -> TextbookDetail {
         let url = baseURL
@@ -167,7 +173,7 @@ struct APIClient {
             .appendingPathComponent(textId)
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -193,13 +199,12 @@ struct APIClient {
         let body = CreateTextbookRequest(name: name, type: type, folderId: folderId)
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         try validate204(response)
     }
 
-    
     // 問題集削除
     func deleteTextbook(textId: String) async throws {
         let url = baseURL
@@ -207,7 +212,7 @@ struct APIClient {
             .appendingPathComponent(textId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -225,7 +230,7 @@ struct APIClient {
         let body = CreateQuestionRequest(words: words)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -238,7 +243,7 @@ struct APIClient {
             .appendingPathComponent(questionId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -253,7 +258,7 @@ struct APIClient {
         var request = authorizedRequest(url: url, method: "POST")
         request.httpBody = nil
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -266,7 +271,7 @@ struct APIClient {
             .appendingPathComponent(statementId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -278,7 +283,7 @@ struct APIClient {
             .appendingPathComponent("textbooks")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -302,7 +307,7 @@ struct APIClient {
             .appendingPathComponent(textId)
 
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -318,7 +323,6 @@ struct APIClient {
         }
     }
 
-    
     // 友達の問題集を自分の問題集に追加
     func addFriendTextbookToMyTextbooks(folderId: String, friendTextbookId: String) async throws {
         let url = baseURL.appendingPathComponent("friend")
@@ -330,7 +334,7 @@ struct APIClient {
         let body = AddFriendTextbookRequest(folderId: folderId, friendTextbookId: friendTextbookId)
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         try validate204(response)
@@ -342,7 +346,7 @@ struct APIClient {
             .appendingPathComponent("studylog")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -365,7 +369,7 @@ struct APIClient {
             .appendingPathComponent("status")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -386,7 +390,7 @@ struct APIClient {
             .appendingPathComponent("studylog")
 
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -409,7 +413,7 @@ struct APIClient {
             .appendingPathComponent("word")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         guard let httpResponse = response as? HTTPURLResponse,
@@ -438,7 +442,7 @@ struct APIClient {
         let body = CreateMyStudyLogRequest(score: score)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -456,7 +460,7 @@ struct APIClient {
         let body = CreateMyStudyLogRequest(score: score)
         request.httpBody = try JSONEncoder().encode(body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         try validate204(response)
@@ -470,7 +474,7 @@ struct APIClient {
             .appendingPathComponent(friendId)
         
         let request = authorizedRequest(url: url, method: "POST")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         try validate204(response)
@@ -484,7 +488,7 @@ struct APIClient {
             .appendingPathComponent(friendId)
         
         let request = authorizedRequest(url: url, method: "DELETE")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         try validate204(response)
@@ -497,7 +501,7 @@ struct APIClient {
             .appendingPathComponent("change")
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -516,21 +520,21 @@ struct APIClient {
     func searchUsers(keyword: String) async throws -> [FriendSearchResult] {
         var components = URLComponents(
             url: baseURL
-                .appendingPathComponent("friend")
+                .appendingPathComponent("user")
                 .appendingPathComponent("search"),
             resolvingAgainstBaseURL: false
         )!
         
         components.queryItems = [
-            URLQueryItem(name: "keyword", value: keyword)
+            URLQueryItem(name: "name", value: keyword)
         ]
         
         guard let url = components.url else {
-            throw APIError.invalidStatusCode   // URL生成失敗時の簡易エラー
+            throw APIError.invalidStatusCode
         }
         
         let request = authorizedRequest(url: url, method: "GET")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
         
         guard let httpResponse = response as? HTTPURLResponse,
@@ -539,8 +543,8 @@ struct APIClient {
         }
         
         do {
-            // レスポンスが [ { id, name, is_friend }, ... ] 形式想定
-            return try JSONDecoder().decode([FriendSearchResult].self, from: data)
+            let decoded = try JSONDecoder().decode(FriendSearchResponse.self, from: data)
+            return decoded.users
         } catch {
             throw APIError.decodeError(error)
         }
@@ -587,8 +591,9 @@ struct APIClient {
 
         print("--------------------------")
     }
-
 }
+
+// MARK: - PDF アップロード関連 & AutoLogin
 
 extension APIClient {
     func createTextbookFromFile(
@@ -603,6 +608,9 @@ extension APIClient {
 
         let boundary = "Boundary-\(UUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // ★ このリクエストだけ個別タイムアウトをさらに長く
+        request.timeoutInterval = 600
 
         let fileData = try Data(contentsOf: fileURL)
         let filename = fileURL.lastPathComponent
@@ -641,7 +649,7 @@ extension APIClient {
 
         request.httpBody = body
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -669,6 +677,9 @@ extension APIClient {
 
         let boundary = "Boundary-\(UUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // ★ これも長めに
+        request.timeoutInterval = 600
 
         let fileData = try Data(contentsOf: fileURL)
         let filename = fileURL.lastPathComponent
@@ -692,7 +703,7 @@ extension APIClient {
 
         request.httpBody = body
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         debugLog(request: request, data: data, response: response)
 
         guard let httpResponse = response as? HTTPURLResponse,
@@ -702,18 +713,16 @@ extension APIClient {
 
         do {
             let result = try JSONDecoder().decode(CreateSuggestWordFromFileResponse.self, from: data)
-            return result.extractWords          // ← ここで [String] にして返す
+            return result.extractWords
         } catch {
             throw APIError.decodeError(error)
         }
     }
 }
 
-
-
 extension APIClient {
     /// 保存されたトークンで自動ログインを試みる
-    /// 成功 = 204 / 失敗 = nil を返す
+    /// 成功 = true / 失敗 = false を返す
     func tryAutoLogin() async -> Bool {
         // トークンが保存されていなければ戻す
         guard token != nil else { return false }
@@ -723,8 +732,8 @@ extension APIClient {
         let request = authorizedRequest(url: url, method: "GET")
 
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-            debugLog(request: request, data: nil, response: response)
+            let (data, response) = try await session.data(for: request)
+            debugLog(request: request, data: data, response: response)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 return false
@@ -743,7 +752,6 @@ extension APIClient {
         }
     }
 }
-
 
 // エラー種類をざっくり定義
 enum APIError: Error {

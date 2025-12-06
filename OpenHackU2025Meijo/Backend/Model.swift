@@ -231,8 +231,8 @@ struct FriendStudyLog: Codable, Identifiable {
     let dateTime: String
     let textbookName: String
     let textbookId: String
-    let accuracy: Double        // 0.0 ~ 100.0
-    let todayProgress: Int      // 0 ~ 100 (%)
+    let accuracy: Double
+    let todayProgress: Int
     
     var id: String { logId }
 }
@@ -276,6 +276,15 @@ struct FriendsListResponse: Codable {
 struct Friend: Codable, Identifiable {
     let id: String
     let name: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "friend_id"
+        case name
+    }
+}
+
+struct FriendSearchResponse: Codable {
+    let users: [FriendSearchResult]
 }
 
 struct FriendSearchResult: Identifiable, Codable, Equatable {
@@ -303,7 +312,6 @@ struct GeneratedQuestionStatement: Codable, Identifiable {
         id = try container.decode(String.self, forKey: .id)
         questionStatement = try container.decode(String.self, forKey: .questionStatement)
 
-        // 👇 null → [] に変換（存在しない場合にも対応）
         choices = try container.decodeIfPresent([String].self, forKey: .choices) ?? []
 
         explanation = try container.decode(String.self, forKey: .explanation)
@@ -317,7 +325,7 @@ struct GeneratedQuestion: Codable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case id
-        case questionStatements = "questionstatements"  // ← ここで対応付け
+        case questionStatements = "questionstatements"
         case answer
     }
 }

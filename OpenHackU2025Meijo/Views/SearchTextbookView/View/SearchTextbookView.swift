@@ -24,26 +24,26 @@ struct SearchTextbookView: View {
                 
                 // 検索トグルボタン
                 HStack {
-                    Button {
-                        withAnimation {
-                            isSearchCategory.toggle()
-                            if isSearchCategory {
-                                isSearchFriend = false
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("カテゴリー")
-                            Image(systemName: isSearchCategory ? "chevron.up" : "chevron.down")
-                        }
-                        .foregroundStyle(Color.white)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            Capsule()
-                                .fill(Color(isSearchCategory ? .pink.opacity(0.8) : .white.opacity(0.2)))
-                        )
-                    }
+//                    Button {
+//                        withAnimation {
+//                            isSearchCategory.toggle()
+//                            if isSearchCategory {
+//                                isSearchFriend = false
+//                            }
+//                        }
+//                    } label: {
+//                        HStack {
+//                            Text("カテゴリー")
+//                            Image(systemName: isSearchCategory ? "chevron.up" : "chevron.down")
+//                        }
+//                        .foregroundStyle(Color.white)
+//                        .padding(.horizontal, 12)
+//                        .padding(.vertical, 6)
+//                        .background(
+//                            Capsule()
+//                                .fill(Color(isSearchCategory ? .pink.opacity(0.8) : .white.opacity(0.2)))
+//                        )
+//                    }
                     
                     Button {
                         withAnimation {
