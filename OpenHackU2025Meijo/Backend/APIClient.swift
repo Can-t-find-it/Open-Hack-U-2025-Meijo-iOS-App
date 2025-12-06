@@ -1,8 +1,6 @@
 import Foundation
 
 struct APIClient {
-    
-    // ★ タイムアウトを伸ばした専用 URLSession
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 120    // リクエスト単位のタイムアウト（秒）
